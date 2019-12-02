@@ -1,0 +1,8 @@
+.ant-table-tbody > tr > td {
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    width: inherit;
+}

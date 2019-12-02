@@ -8,6 +8,8 @@ import React, {
 } from 'react'
 import { throttle } from 'lodash-es'
 
+import './style.css'
+
 // ===============reducer ============== //
 const initialState = {
     // 行高度
