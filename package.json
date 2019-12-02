@@ -1,0 +1,26 @@
+{
+  "name": "virtuallist-antd",
+  "version": "0.1.0",
+  "description": "virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table",
+  "main": "src/index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "antd-table",
+    "virtualList",
+    "infinite",
+    "scrolling",
+    "antd-table虚拟列表",
+    "antd-table无限滚动"
+  ],
+  "author": "crawler-django",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash-es": "^4.17.3",
+    "@types/react": "^16.9.13",
+    "lodash-es": "^4.17.15",
+    "react": "^16.12.0",
+    "typescript": "^3.7.2"
+  }
+}
