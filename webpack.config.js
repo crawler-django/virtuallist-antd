@@ -7,7 +7,7 @@ module.exports = {
 	devtool: "",
 	output: {
 		filename: "index.js",
-		path: path.resolve(__dirname, "./build"),
+		path: path.resolve(__dirname, "build"),
 		
 	},
 	externals: [/react/i, /antd/i, /router/i],
