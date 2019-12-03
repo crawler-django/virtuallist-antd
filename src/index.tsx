@@ -28,6 +28,10 @@ function reducer(state, action) {
             let curScrollTop = action.curScrollTop
             let scrollHeight = action.scrollHeight
 
+            if (scrollHeight <= 0) {
+                scrollHeight = 0
+            }
+
             if (state.scrollHeight !== 0) {
                 scrollHeight = state.scrollHeight
             }
