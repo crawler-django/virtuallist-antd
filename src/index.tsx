@@ -1,4 +1,4 @@
-// import { TableComponents } from 'antd/lib/table'
+import { TableComponents } from 'antd/lib/table'
 import React, {
     useRef,
     useEffect,
@@ -276,7 +276,7 @@ function VTable(props): JSX.Element {
 }
 
 // ================导出===================
-export function VList() {
+export function VList(): TableComponents {
     // 初始化staticRowHeight
     staticRowHeight = 0
 
