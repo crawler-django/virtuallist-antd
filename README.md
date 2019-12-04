@@ -6,6 +6,14 @@
 
 virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table
 
+* 你可以像平常一样在columns里使用fixed
+* 支持进行条件搜索 变更数据.
+* 300行不到的代码
+* 目前用了节流 - 120ms 在滚动的时候刷新窗口
+
+## example
+* [简单的例子](https://codesandbox.io/s/festive-worker-wc5wp)
+
 ## Install
 
 ```bash
