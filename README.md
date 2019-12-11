@@ -16,6 +16,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
 ## example
 * [简单的例子](https://codesandbox.io/s/festive-worker-wc5wp)
 * [简单的例子(calc)](https://codesandbox.io/s/musing-http-7k254)
+* [简单的分页例子](https://codesandbox.io/s/gracious-resonance-tmw44)
 
 ## Install
 
