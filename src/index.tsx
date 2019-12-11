@@ -157,12 +157,16 @@ function VTable(props): JSX.Element {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const wrap_tableRef = useRef<HTMLDivElement>(null)
+    const wrap_tableRef = useRef(null)
     const tableRef = useRef(null)
 
     let totalLen = children[2]?.props?.children?.length ?? 0
     let tableScrollY = children[2]?.props?.children[0]?.props?.scroll?.y ?? 0
     let fixed = children[0]?.props?.fixed ?? 0
+
+    if (typeof tableScrollY === 'string') {
+        tableScrollY = wrap_tableRef.current?.parentNode?.offsetHeight
+    }
 
     // console.log(`VTable fixed ${fixed}`)
     // table总高度
@@ -223,7 +227,7 @@ function VTable(props): JSX.Element {
                     scrollHeight
                 })
             }
-        }, 120)
+        }, 100)
 
         let ref = wrap_tableRef?.current?.parentNode
 
