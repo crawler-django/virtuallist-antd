@@ -17,7 +17,9 @@ const initialState = {
     // 当前的scrollTop
     curScrollTop: 0,
     // 可滚动区域的高度
-    scrollHeight: 0
+    scrollHeight: 0,
+    // scrollY值
+    tableScrollY: 0
 }
 
 function reducer(state, action) {
@@ -27,23 +29,27 @@ function reducer(state, action) {
             // 获取值
             let curScrollTop = action.curScrollTop
             let scrollHeight = action.scrollHeight
+            let tableScrollY = action.tableScrollY
 
             if (scrollHeight <= 0) {
                 scrollHeight = 0
             }
 
             if (state.scrollHeight !== 0) {
-                scrollHeight = state.scrollHeight
+                if (tableScrollY === state.tableScrollY) {
+                    scrollHeight = state.scrollHeight
+                }
             }
 
-            if (curScrollTop > scrollHeight) {
-                curScrollTop = scrollHeight
+            if (state.scrollHeight && curScrollTop > state.scrollHeight) {
+                curScrollTop = state.scrollHeight
             }
 
             return {
                 ...state,
                 curScrollTop,
-                scrollHeight
+                scrollHeight,
+                tableScrollY
             }
         // 初始化每行的高度, 表格总高度, 渲染的条数
         case 'initHeight':
@@ -179,11 +185,10 @@ function VTable(props): JSX.Element {
     // 渲染的条数
     let renderLen = 1
     if (state.rowHeight && totalLen && tableScrollY) {
-        let tempRenderLen = (tableScrollY / state.rowHeight) | (0 + 1 + 5)
+        let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 5
         // console.log('tempRenderLen', tempRenderLen)
         renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
     }
-    // console.log('table', renderLen)
 
     // 渲染中的第一条
     let start = state.rowHeight ? (state.curScrollTop / state.rowHeight) | 0 : 0
@@ -195,13 +200,11 @@ function VTable(props): JSX.Element {
         state.rowHeight &&
         state.curScrollTop > state.rowHeight
     ) {
-        if (start > 1) {
+        if (start > totalLen - renderLen) {
+
+        } else if (start > 1) {
             start = start - 1
             offsetStart += state.rowHeight
-        }
-        if (start >= totalLen - renderLen) {
-            start = totalLen - renderLen
-            offsetStart = 0
         }
     }
 
@@ -224,7 +227,8 @@ function VTable(props): JSX.Element {
                 dispatch({
                     type: 'changeTrs',
                     curScrollTop: scrollTop,
-                    scrollHeight
+                    scrollHeight,
+                    tableScrollY
                 })
             }
         }, 100)
