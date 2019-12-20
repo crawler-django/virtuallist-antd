@@ -175,7 +175,7 @@ function VTable(props): JSX.Element {
     // table总高度
     let tableHeight: string | number = 'auto'
     if (state.rowHeight && totalLen) {
-        tableHeight = state.rowHeight * totalLen
+        tableHeight = state.rowHeight * (totalLen + 1)
     }
 
     if (isNumber(tableHeight) && tableHeight < tableScrollY) {
@@ -185,7 +185,7 @@ function VTable(props): JSX.Element {
     // 渲染的条数
     let renderLen = 1
     if (state.rowHeight && totalLen && tableScrollY) {
-        let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 5
+        let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 2
 
         renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
     }
@@ -202,7 +202,7 @@ function VTable(props): JSX.Element {
         state.curScrollTop > state.rowHeight
     ) {
         if (start > totalLen - renderLen) {
-
+            offsetStart = 0
         } else if (start > 1) {
             start = start - 1
             offsetStart += state.rowHeight
