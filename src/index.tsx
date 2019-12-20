@@ -6,7 +6,7 @@ import React, {
     createContext,
     useReducer
 } from 'react'
-import { throttle } from 'lodash-es'
+import { throttle, isNumber } from 'lodash-es'
 
 import './style.css'
 
@@ -159,8 +159,6 @@ function VTable(props): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    // const [curScrollTop, setCurScrollTop] = useState(0)
-
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const wrap_tableRef = useRef(null)
@@ -174,19 +172,21 @@ function VTable(props): JSX.Element {
         tableScrollY = wrap_tableRef.current?.parentNode?.offsetHeight
     }
 
-    // console.log(`VTable fixed ${fixed}`)
     // table总高度
     let tableHeight: string | number = 'auto'
     if (state.rowHeight && totalLen) {
         tableHeight = state.rowHeight * totalLen
     }
 
-    // console.log(state.rowHeight, totalLen, tableScrollY)
+    if (isNumber(tableHeight) && tableHeight < tableScrollY) {
+        tableScrollY = tableHeight
+    }
+
     // 渲染的条数
     let renderLen = 1
     if (state.rowHeight && totalLen && tableScrollY) {
         let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 5
-        // console.log('tempRenderLen', tempRenderLen)
+
         renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
     }
 
@@ -194,6 +194,7 @@ function VTable(props): JSX.Element {
     let start = state.rowHeight ? (state.curScrollTop / state.rowHeight) | 0 : 0
     // 偏移量
     let offsetStart = state.rowHeight ? state.curScrollTop % state.rowHeight : 0
+    
     // 用来优化向上滚动出现的空白
     if (
         state.curScrollTop &&
@@ -206,9 +207,10 @@ function VTable(props): JSX.Element {
             start = start - 1
             offsetStart += state.rowHeight
         }
+    } else {
+        start = 0
     }
 
-    // console.log(start, offsetStart)
 
     useEffect(() => {
         // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
