@@ -4,6 +4,9 @@
 
 [![NPM](https://img.shields.io/npm/v/virtuallist-antd.svg)](https://www.npmjs.com/package/virtuallist-antd) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+仓库: https://github.com/crawler-django/virtuallist-antd
+版本更新记录: https://github.com/crawler-django/virtuallist-antd/blob/master/update.md
+
 virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table
 
 * 你可以像平常一样在columns里使用fixed
