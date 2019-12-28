@@ -175,7 +175,7 @@ function VTable(props): JSX.Element {
     // table总高度
     let tableHeight: string | number = 'auto'
     if (state.rowHeight && totalLen) {
-        tableHeight = state.rowHeight * (totalLen + 1)
+        tableHeight = state.rowHeight * totalLen + 10
     }
 
     if (isNumber(tableHeight) && tableHeight < tableScrollY) {
