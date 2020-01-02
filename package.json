@@ -1,6 +1,6 @@
 {
   "name": "virtuallist-antd",
-  "version": "0.2.6",
+  "version": "0.2.7-beta1",
   "description": "virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -49,6 +49,7 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-typescript2": "^0.25.3",
+    "rollup-plugin-uglify-es": "0.0.1",
     "rollup-plugin-url": "^3.0.1",
     "style-loader": "^1.0.1",
     "ts-loader": "^6.2.1",
