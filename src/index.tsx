@@ -182,12 +182,20 @@ function VTable(props): JSX.Element {
         tableScrollY = tableHeight
     }
 
+    // 处理tableScrollY <= 0的情况
+    if (tableScrollY <= 0) {
+        tableScrollY = 0
+    }
+
     // 渲染的条数
     let renderLen = 1
     if (state.rowHeight && totalLen && tableScrollY) {
-        let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 2
-
-        renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
+        if (tableScrollY <= 0) {
+            renderLen = 0
+        } else {
+            let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 2
+            renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
+        }
     }
 
     // 渲染中的第一条
