@@ -15,6 +15,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
 * 目前用了节流 - 100ms 在滚动的时候刷新窗口
 * 支持calc()
 * 支持分页
+* 仅支持antd3.x版本.  antd4全面推广且实现了虚拟列表特性后, 将不再维护此代码.
 
 ## example
 * [简单的例子](https://codesandbox.io/s/festive-worker-wc5wp)
