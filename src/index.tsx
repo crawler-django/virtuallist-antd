@@ -263,8 +263,7 @@ function VTable(props): JSX.Element {
                 position: 'relative',
                 height: tableHeight,
                 boxSizing: 'border-box',
-                paddingTop: state.curScrollTop,
-                fontFamily: 'sans-serif'
+                paddingTop: state.curScrollTop
             }}
         >
             <ScrollContext.Provider
