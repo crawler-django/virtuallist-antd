@@ -1,4 +1,4 @@
-.ant-table-tbody > tr > td {
+.virtuallist .ant-table-tbody > tr > td {
     box-sizing: border-box;
     white-space: nowrap;
     overflow: hidden;

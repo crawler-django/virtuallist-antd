@@ -1,10 +1,11 @@
-import { TableComponents } from 'antd/lib/table'
 import React, {
     useRef,
     useEffect,
     useContext,
     createContext,
-    useReducer
+    useReducer,
+    useState,
+    useMemo
 } from 'react'
 import { throttle, isNumber } from 'lodash-es'
 
@@ -55,7 +56,6 @@ function reducer(state, action) {
         case 'initHeight':
             // 获取值
             let rowHeight = action.rowHeight
-            // console.log('rowheight', rowHeight)
             return {
                 ...state,
                 rowHeight
@@ -74,53 +74,47 @@ function reducer(state, action) {
 
 // ===============context ============== //
 const ScrollContext = createContext({
-    fixed: 0,
     dispatch: undefined,
     renderLen: 1,
     start: 0,
     offsetStart: 0,
     // =============
-    rowHeight: initialState.rowHeight
+    rowHeight: initialState.rowHeight,
+    totalLen: 0
 })
 
 // ==============常量 ================== //
-// 用来解决fix表格和unfix表格的高度差异
-let staticRowHeight = 0
+let scrollY: number | string = 0
 
 // =============组件 =================== //
 
 function VRow(props): JSX.Element {
-    const { dispatch, fixed, rowHeight } = useContext(ScrollContext)
+    const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
 
     const { children, ...restProps } = props
 
     const trRef = useRef(null)
-    // console.log(`row fixed ${fixed}`)
 
     useEffect(() => {
         const initHeight = trRef => {
-            if (trRef?.current?.offsetHeight && !rowHeight) {
+            if (trRef?.current?.offsetHeight && !rowHeight && totalLen) {
                 let tempRowHeight = trRef?.current?.offsetHeight ?? 0
-                if (!fixed) {
-                    staticRowHeight = tempRowHeight
-                }
-                // console.log('state', rowHeight, tempRowHeight)
                 dispatch({
                     type: 'initHeight',
-                    rowHeight: fixed ? staticRowHeight : tempRowHeight
+                    rowHeight: tempRowHeight
                 })
             }
         }
 
         initHeight(trRef)
-    }, [trRef, dispatch, rowHeight, fixed])
+    }, [trRef, dispatch, rowHeight, totalLen])
 
     return (
         <tr
             {...restProps}
             ref={trRef}
             style={{
-                height: rowHeight && fixed ? rowHeight + 1 : rowHeight,
+                height: rowHeight ? rowHeight : 'auto',
                 boxSizing: 'border-box'
             }}
         >
@@ -134,23 +128,24 @@ function VWrapper(props): JSX.Element {
 
     const { renderLen, start, offsetStart } = useContext(ScrollContext)
 
-    // console.log(`wrap fixed ${fixed}`)
-    // console.log(start, renderLen)
-    let trs = []
-    for (let i = 0; i < renderLen; i++) {
-        if (children[start + i]) {
-            trs.push(children[start + i])
-        }
-    }
+    let contents = children[1]
 
-    // console.log(trs)
+    let tempNode = null
+    if (Array.isArray(contents) && contents.length) {
+        tempNode = [
+            children[0],
+            contents.slice(start, start + renderLen).map(item => item[0])
+        ]
+    } else {
+        tempNode = children
+    }
 
     return (
         <tbody
             {...restProps}
             style={{ transform: `translateY(-${offsetStart}px)` }}
         >
-            {trs}
+            {tempNode}
         </tbody>
     )
 }
@@ -159,50 +154,75 @@ function VTable(props): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
+    // const [curScrollTop, setCurScrollTop] = useState(0)
+
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const wrap_tableRef = useRef(null)
     const tableRef = useRef(null)
 
-    let totalLen = children[2]?.props?.children?.length ?? 0
-    let tableScrollY = children[2]?.props?.children[0]?.props?.scroll?.y ?? 0
-    let fixed = children[0]?.props?.fixed ?? 0
+    // 数据的总条数
+    const [totalLen, setTotalLen] = useState(
+        children[1]?.props?.data?.length ?? 0
+    )
 
-    if (typeof tableScrollY === 'string') {
-        tableScrollY = wrap_tableRef.current?.parentNode?.offsetHeight
-    }
+    useEffect(() => {
+        if (children[1]?.props?.data?.length) {
+            setTotalLen(children[1]?.props?.data?.length)
+        }
+    }, [children])
 
     // table总高度
-    let tableHeight: string | number = 'auto'
-    if (state.rowHeight && totalLen) {
-        tableHeight = state.rowHeight * totalLen + 10
-    }
+    const tableHeight = useMemo(() => {
+        let temp: string | number = 'auto'
+        if (state.rowHeight && totalLen) {
+            temp = state.rowHeight * totalLen + 10
+        }
+        return temp
+    }, [state.rowHeight, totalLen])
 
-    if (isNumber(tableHeight) && tableHeight < tableScrollY) {
-        tableScrollY = tableHeight
-    }
+    // table的scrollY值
+    const tableScrollY = useMemo(() => {
+        let temp = 0
+        if (typeof scrollY === 'string') {
+            temp = wrap_tableRef.current?.parentNode?.offsetHeight
+        } else {
+            temp = scrollY
+        }
 
-    // 处理tableScrollY <= 0的情况
-    if (tableScrollY <= 0) {
-        tableScrollY = 0
-    }
+        if (isNumber(tableHeight) && tableHeight < temp) {
+            temp = tableHeight
+        }
+
+        // 处理tableScrollY <= 0的情况
+        if (temp <= 0) {
+            temp = 0
+        }
+
+        return temp
+    }, [tableHeight])
 
     // 渲染的条数
-    let renderLen = 1
-    if (state.rowHeight && totalLen && tableScrollY) {
-        if (tableScrollY <= 0) {
-            renderLen = 0
-        } else {
-            let tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 2
-            renderLen = tempRenderLen > totalLen ? totalLen : tempRenderLen
+    const renderLen = useMemo(() => {
+        let temp = 1
+        if (state.rowHeight && totalLen && tableScrollY) {
+            if (tableScrollY <= 0) {
+                temp = 0
+            } else {
+                let tempRenderLen =
+                    ((tableScrollY / state.rowHeight) | 0) + 1 + 2
+                // console.log('tempRenderLen', tempRenderLen)
+                temp = tempRenderLen > totalLen ? totalLen : tempRenderLen
+            }
         }
-    }
+        return temp
+    }, [state.rowHeight, totalLen, tableScrollY])
 
     // 渲染中的第一条
     let start = state.rowHeight ? (state.curScrollTop / state.rowHeight) | 0 : 0
     // 偏移量
     let offsetStart = state.rowHeight ? state.curScrollTop % state.rowHeight : 0
-    
+
     // 用来优化向上滚动出现的空白
     if (
         state.curScrollTop &&
@@ -210,6 +230,7 @@ function VTable(props): JSX.Element {
         state.curScrollTop > state.rowHeight
     ) {
         if (start > totalLen - renderLen) {
+            // 可能以后会做点操作
             offsetStart = 0
         } else if (start > 1) {
             start = start - 1
@@ -219,15 +240,12 @@ function VTable(props): JSX.Element {
         start = 0
     }
 
-
     useEffect(() => {
         // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
         let parentNode: any = wrap_tableRef.current.parentNode
         parentNode.scrollTop = 0
         dispatch({ type: 'reset' })
     }, [totalLen])
-
-    // console.log(totalLen, scrollY)
 
     useEffect(() => {
         const throttleScroll = throttle(e => {
@@ -241,7 +259,7 @@ function VTable(props): JSX.Element {
                     tableScrollY
                 })
             }
-        }, 100)
+        }, 60)
 
         let ref = wrap_tableRef?.current?.parentNode
 
@@ -250,13 +268,13 @@ function VTable(props): JSX.Element {
         }
 
         return () => {
-            // console.log('clear')
             ref.removeEventListener('scroll', throttleScroll)
         }
     }, [wrap_tableRef, state.curScrollTop, tableScrollY, state.scrollHeight])
 
     return (
         <div
+            className="virtuallist"
             ref={wrap_tableRef}
             style={{
                 width,
@@ -268,12 +286,12 @@ function VTable(props): JSX.Element {
         >
             <ScrollContext.Provider
                 value={{
-                    fixed,
                     dispatch,
                     rowHeight: state.rowHeight,
                     start,
                     offsetStart,
-                    renderLen
+                    renderLen,
+                    totalLen
                 }}
             >
                 <table
@@ -293,9 +311,8 @@ function VTable(props): JSX.Element {
 }
 
 // ================导出===================
-export function VList(): TableComponents {
-    // 初始化staticRowHeight
-    staticRowHeight = 0
+export function VList(props: { height: number | string }): any {
+    scrollY = props.height
 
     return {
         table: VTable,
