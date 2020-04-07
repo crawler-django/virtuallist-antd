@@ -11,8 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c",
-    "preinstall": "npx npm-force-resolutions"
+    "build": "rollup -c"
   },
   "keywords": [
     "antd-table",
