@@ -93,7 +93,7 @@ function VRow(props): JSX.Element {
 
     const { children, ...restProps } = props
 
-    const trRef = useRef(null)
+    const trRef = useRef<HTMLTableRowElement>(null)
 
     useEffect(() => {
         const initHeight = trRef => {
@@ -158,11 +158,11 @@ function VTable(props): JSX.Element {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const wrap_tableRef = useRef(null)
-    const tableRef = useRef(null)
+    const wrap_tableRef = useRef<HTMLDivElement>(null)
+    const tableRef = useRef<HTMLTableElement>(null)
 
     // 数据的总条数
-    const [totalLen, setTotalLen] = useState(
+    const [totalLen, setTotalLen] = useState<number>(
         children[1]?.props?.data?.length ?? 0
     )
 
@@ -173,7 +173,7 @@ function VTable(props): JSX.Element {
     }, [children])
 
     // table总高度
-    const tableHeight = useMemo(() => {
+    const tableHeight = useMemo<string | number>(() => {
         let temp: string | number = 'auto'
         if (state.rowHeight && totalLen) {
             temp = state.rowHeight * totalLen + 10
@@ -182,30 +182,9 @@ function VTable(props): JSX.Element {
     }, [state.rowHeight, totalLen])
 
     // table的scrollY值
-    // const tableScrollY = useMemo(() => {
-    //     let temp = 0
-    //     if (typeof scrollY === 'string') {
-    //         temp = wrap_tableRef.current?.parentNode?.offsetHeight
-    //     } else {
-    //         temp = scrollY
-    //     }
-
-    //     if (isNumber(tableHeight) && tableHeight < temp) {
-    //         temp = tableHeight
-    //     }
-
-    //     // 处理tableScrollY <= 0的情况
-    //     if (temp <= 0) {
-    //         temp = 0
-    //     }
-
-    //     return temp
-    // }, [tableHeight])
-
-    // table的scrollY值
     let tableScrollY = 0
     if (typeof scrollY === 'string') {
-        tableScrollY = wrap_tableRef.current?.parentNode?.offsetHeight
+        tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)?.offsetHeight
     } else {
         tableScrollY = scrollY
     }
@@ -220,7 +199,7 @@ function VTable(props): JSX.Element {
     }
 
     // 渲染的条数
-    const renderLen = useMemo(() => {
+    const renderLen = useMemo<number>(() => {
         let temp = 1
         if (state.rowHeight && totalLen && tableScrollY) {
             if (tableScrollY <= 0) {
@@ -259,14 +238,16 @@ function VTable(props): JSX.Element {
 
     useEffect(() => {
         // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
-        let parentNode: any = wrap_tableRef.current.parentNode
-        parentNode.scrollTop = 0
+        let parentNode = wrap_tableRef.current?.parentNode as HTMLElement
+        if (parentNode) {
+            parentNode.scrollTop = 0
+        }
         dispatch({ type: 'reset' })
     }, [totalLen])
 
     useEffect(() => {
         const throttleScroll = throttle(e => {
-            let scrollTop = e?.target?.scrollTop ?? 0
+            let scrollTop: number = e?.target?.scrollTop ?? 0
             if (scrollTop !== state.curScrollTop) {
                 let scrollHeight = e.target.scrollHeight - tableScrollY
                 dispatch({
@@ -278,7 +259,7 @@ function VTable(props): JSX.Element {
             }
         }, 60)
 
-        let ref = wrap_tableRef?.current?.parentNode
+        let ref = wrap_tableRef?.current?.parentNode as HTMLElement
 
         if (ref) {
             ref.addEventListener('scroll', throttleScroll)
