@@ -31,7 +31,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
   (only support vertical virtuallist)
 * 此组件会计算第一行的高度, 并且以第一行的高度为准来固定每行的高度. 组件有自带的css, 会使每行的td不会换行.
 
-  (Because this component will count the height of the first line and fix the height of each line based on the height of the first line. So that component has self css, means each line do not wrap (td do not wrap))
+  (this component will calculate first line's height and amend following each line's height based on it. It has its own css, which prevents each line's TD from wrapping (td do not wrap))
 
 ## example
 * [简单的例子(easy example)](https://codesandbox.io/s/festive-worker-wc5wp)
