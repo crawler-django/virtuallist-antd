@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码 v0.3.2
+## 最新的代码 v0.3.3
+1. revert v0.3.2
+
+## v0.3.2
 1. fix: 处理因样式问题导致 antd fixed表格 阴影失效的问题.  (fix antd box-shadow not work)
 
 ## v0.3.1
