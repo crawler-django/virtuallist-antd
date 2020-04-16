@@ -8,6 +8,11 @@ import uglify from 'rollup-plugin-uglify-es'
 import url from 'rollup-plugin-url'
 import svgr from '@svgr/rollup'
 
+import simplevars from 'postcss-simple-vars'
+import nested from 'postcss-nested'
+import cssnext from 'postcss-cssnext'
+import cssnano from 'cssnano'
+
 import pkg from './package.json'
 
 export default {
@@ -25,7 +30,13 @@ export default {
   plugins: [
     external(),
     postcss({
-      modules: true
+      plugins: [
+        simplevars(),
+        nested(),
+        cssnext({ warnForDuplicates: false }),
+        cssnano()
+      ],  
+      extendsions: ['.css']
     }),
     uglify(),
     url(),
