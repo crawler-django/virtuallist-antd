@@ -9,8 +9,6 @@ import React, {
 } from 'react'
 import { throttle, isNumber } from 'lodash-es'
 
-import './style.css'
-
 // ===============reducer ============== //
 const initialState = {
     // 行高度
@@ -87,6 +85,27 @@ const ScrollContext = createContext({
 let scrollY: number | string = 0
 
 // =============组件 =================== //
+
+function VCell(props): JSX.Element {
+    const { children, ...restProps } = props
+
+    return (
+        <td {...restProps}>
+            <div
+                style={{
+                    boxSizing: 'border-box',
+                    whiteSpace: 'nowrap',
+                    verticalAlign: 'middle',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: 'inherit'
+                }}
+            >
+                {children}
+            </div>
+        </td>
+    )
+}
 
 function VRow(props): JSX.Element {
     const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
@@ -316,7 +335,8 @@ export function VList(props: { height: number | string }): any {
         table: VTable,
         body: {
             wrapper: VWrapper,
-            row: VRow
+            row: VRow,
+            cell: VCell
         }
     }
 }
