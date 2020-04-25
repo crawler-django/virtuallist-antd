@@ -1,6 +1,10 @@
 ## 更新
 
-## 最新的代码 v0.4.0
+## 最新的代码 v0.4.1
+1. fix: 处理因样式问题导致 antd fixed表格 阴影失效的问题. (fix antd box-shadow not work)
+2. 新增了VCell, 会替代components的body cell. 每个td下会有一个div包裹. 
+
+## v0.4.0
 1. fix: 处理css样式失效的问题. (fix internal css not work)
 
 ## v0.3.3
