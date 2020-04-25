@@ -8,7 +8,7 @@
 
 > 版本更新记录(update detail): https://github.com/crawler-django/virtuallist-antd/blob/master/update.md
 
-virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table
+virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table. 暂时不会支持树形结构的表格功能. (not support tree data)
 
 * 已经支持4.0的antd-table.(4.x ---- v0.3.0后,  3.x ---- v0.2.8.) 
 
