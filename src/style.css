@@ -1,0 +1,8 @@
+.virtuallist .ant-table-tbody > tr > td > div {
+    box-sizing: border-box;
+    white-space: nowrap;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: inherit;
+}

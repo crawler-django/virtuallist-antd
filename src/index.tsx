@@ -9,6 +9,8 @@ import React, {
 } from 'react'
 import { throttle, isNumber } from 'lodash-es'
 
+import './style.css'
+
 // ===============reducer ============== //
 const initialState = {
     // 行高度
@@ -91,16 +93,7 @@ function VCell(props): JSX.Element {
 
     return (
         <td {...restProps}>
-            <div
-                style={{
-                    boxSizing: 'border-box',
-                    whiteSpace: 'nowrap',
-                    verticalAlign: 'middle',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: 'inherit'
-                }}
-            >
+            <div>
                 {children}
             </div>
         </td>
