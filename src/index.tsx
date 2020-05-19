@@ -72,268 +72,257 @@ function reducer(state, action) {
     }
 }
 
-const useReqComps = (scrollY: number | string) => {
-    // ===============context ============== //
-    const ScrollContext = createContext({
-        dispatch: undefined,
-        renderLen: 1,
-        start: 0,
-        offsetStart: 0,
-        // =============
-        rowHeight: initialState.rowHeight,
-        totalLen: 0
-    })
+// ===============context ============== //
+const ScrollContext = createContext({
+    dispatch: undefined,
+    renderLen: 1,
+    start: 0,
+    offsetStart: 0,
+    // =============
+    rowHeight: initialState.rowHeight,
+    totalLen: 0
+})
 
-    // =============组件 =================== //
+// ==============常量 ================== //
+let scrollY: number | string = 0
 
-    function VCell(props): JSX.Element {
-        const { children, ...restProps } = props
+// =============组件 =================== //
 
-        return (
-            <td {...restProps}>
-                <div>{children}</div>
-            </td>
-        )
-    }
+function VCell(props): JSX.Element {
+    const { children, ...restProps } = props
 
-    function VRow(props): JSX.Element {
-        const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
-
-        const { children, ...restProps } = props
-
-        const trRef = useRef<HTMLTableRowElement>(null)
-
-        useEffect(() => {
-            const initHeight = (trRef) => {
-                if (trRef?.current?.offsetHeight && !rowHeight && totalLen) {
-                    let tempRowHeight = trRef?.current?.offsetHeight ?? 0
-                    dispatch({
-                        type: 'initHeight',
-                        rowHeight: tempRowHeight
-                    })
-                }
-            }
-
-            initHeight(trRef)
-        }, [trRef, dispatch, rowHeight, totalLen])
-
-        return (
-            <tr
-                {...restProps}
-                ref={trRef}
-                style={{
-                    height: rowHeight ? rowHeight : 'auto',
-                    boxSizing: 'border-box'
-                }}
-            >
+    return (
+        <td {...restProps}>
+            <div>
                 {children}
-            </tr>
-        )
+            </div>
+        </td>
+    )
+}
+
+function VRow(props): JSX.Element {
+    const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
+
+    const { children, ...restProps } = props
+
+    const trRef = useRef<HTMLTableRowElement>(null)
+
+    useEffect(() => {
+        const initHeight = trRef => {
+            if (trRef?.current?.offsetHeight && !rowHeight && totalLen) {
+                let tempRowHeight = trRef?.current?.offsetHeight ?? 0
+                dispatch({
+                    type: 'initHeight',
+                    rowHeight: tempRowHeight
+                })
+            }
+        }
+
+        initHeight(trRef)
+    }, [trRef, dispatch, rowHeight, totalLen])
+
+    return (
+        <tr
+            {...restProps}
+            ref={trRef}
+            style={{
+                height: rowHeight ? rowHeight : 'auto',
+                boxSizing: 'border-box'
+            }}
+        >
+            {children}
+        </tr>
+    )
+}
+
+function VWrapper(props): JSX.Element {
+    const { children, ...restProps } = props
+
+    const { renderLen, start, offsetStart } = useContext(ScrollContext)
+
+    let contents = children[1]
+
+    let tempNode = null
+    if (Array.isArray(contents) && contents.length) {
+        tempNode = [
+            children[0],
+            contents.slice(start, start + renderLen).map(item => item[0])
+        ]
+    } else {
+        tempNode = children
     }
 
-    function VWrapper(props): JSX.Element {
-        const { children, ...restProps } = props
+    return (
+        <tbody
+            {...restProps}
+            style={{ transform: `translateY(-${offsetStart}px)` }}
+        >
+            {tempNode}
+        </tbody>
+    )
+}
 
-        const { renderLen, start, offsetStart } = useContext(ScrollContext)
+function VTable(props): JSX.Element {
+    const { style, children, ...rest } = props
+    const { width, ...rest_style } = style
 
-        let contents = children[1]
+    // const [curScrollTop, setCurScrollTop] = useState(0)
 
-        let tempNode = null
-        if (Array.isArray(contents) && contents.length) {
-            tempNode = [
-                children[0],
-                contents.slice(start, start + renderLen).map((item) => item[0])
-            ]
-        } else {
-            tempNode = children
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const wrap_tableRef = useRef<HTMLDivElement>(null)
+    const tableRef = useRef<HTMLTableElement>(null)
+
+    // 数据的总条数
+    const [totalLen, setTotalLen] = useState<number>(
+        children[1]?.props?.data?.length ?? 0
+    )
+
+    useEffect(() => {
+        if (children[1]?.props?.data?.length) {
+            setTotalLen(children[1]?.props?.data?.length)
         }
+    }, [children])
 
-        return (
-            <tbody
-                {...restProps}
-                style={{ transform: `translateY(-${offsetStart}px)` }}
-            >
-                {tempNode}
-            </tbody>
-        )
+    // table总高度
+    const tableHeight = useMemo<string | number>(() => {
+        let temp: string | number = 'auto'
+        if (state.rowHeight && totalLen) {
+            temp = state.rowHeight * totalLen + 10
+        }
+        return temp
+    }, [state.rowHeight, totalLen])
+
+    // table的scrollY值
+    let tableScrollY = 0
+    if (typeof scrollY === 'string') {
+        tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)?.offsetHeight
+    } else {
+        tableScrollY = scrollY
     }
 
-    function VTable(props): JSX.Element {
-        const { style, children, ...rest } = props
-        const { width, ...rest_style } = style
+    if (isNumber(tableHeight) && tableHeight < tableScrollY) {
+        tableScrollY = tableHeight
+    }
 
-        // const [curScrollTop, setCurScrollTop] = useState(0)
+    // 处理tableScrollY <= 0的情况
+    if (tableScrollY <= 0) {
+        tableScrollY = 0
+    }
 
-        const [state, dispatch] = useReducer(reducer, initialState)
-
-        const wrap_tableRef = useRef<HTMLDivElement>(null)
-        const tableRef = useRef<HTMLTableElement>(null)
-
-        // 数据的总条数
-        const [totalLen, setTotalLen] = useState<number>(
-            children[1]?.props?.data?.length ?? 0
-        )
-
-        useEffect(() => {
-            if (children[1]?.props?.data?.length) {
-                setTotalLen(children[1]?.props?.data?.length)
+    // 渲染的条数
+    const renderLen = useMemo<number>(() => {
+        let temp = 1
+        if (state.rowHeight && totalLen && tableScrollY) {
+            if (tableScrollY <= 0) {
+                temp = 0
+            } else {
+                let tempRenderLen =
+                    ((tableScrollY / state.rowHeight) | 0) + 1 + 2
+                // console.log('tempRenderLen', tempRenderLen)
+                temp = tempRenderLen > totalLen ? totalLen : tempRenderLen
             }
-        }, [children])
+        }
+        return temp
+    }, [state.rowHeight, totalLen, tableScrollY])
 
-        // table总高度
-        const tableHeight = useMemo<string | number>(() => {
-            let temp: string | number = 'auto'
-            if (state.rowHeight && totalLen) {
-                temp = state.rowHeight * totalLen + 10
+    // 渲染中的第一条
+    let start = state.rowHeight ? (state.curScrollTop / state.rowHeight) | 0 : 0
+    // 偏移量
+    let offsetStart = state.rowHeight ? state.curScrollTop % state.rowHeight : 0
+
+    // 用来优化向上滚动出现的空白
+    if (
+        state.curScrollTop &&
+        state.rowHeight &&
+        state.curScrollTop > state.rowHeight
+    ) {
+        if (start > totalLen - renderLen) {
+            // 可能以后会做点操作
+            offsetStart = 0
+        } else if (start > 1) {
+            start = start - 1
+            offsetStart += state.rowHeight
+        }
+    } else {
+        start = 0
+    }
+
+    useEffect(() => {
+        // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
+        let parentNode = wrap_tableRef.current?.parentNode as HTMLElement
+        if (parentNode) {
+            parentNode.scrollTop = 0
+        }
+        dispatch({ type: 'reset' })
+    }, [totalLen])
+
+    useEffect(() => {
+        const throttleScroll = throttle(e => {
+            let scrollTop: number = e?.target?.scrollTop ?? 0
+            if (scrollTop !== state.curScrollTop) {
+                let scrollHeight = e.target.scrollHeight - tableScrollY
+                dispatch({
+                    type: 'changeTrs',
+                    curScrollTop: scrollTop,
+                    scrollHeight,
+                    tableScrollY
+                })
             }
-            return temp
-        }, [state.rowHeight, totalLen])
+        }, 60)
 
-        // table的scrollY值
-        let tableScrollY = 0
-        if (typeof scrollY === 'string') {
-            tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)
-                ?.offsetHeight
-        } else {
-            tableScrollY = scrollY
+        let ref = wrap_tableRef?.current?.parentNode as HTMLElement
+
+        if (ref) {
+            ref.addEventListener('scroll', throttleScroll)
         }
 
-        if (isNumber(tableHeight) && tableHeight < tableScrollY) {
-            tableScrollY = tableHeight
+        return () => {
+            ref.removeEventListener('scroll', throttleScroll)
         }
+    }, [wrap_tableRef, state.curScrollTop, tableScrollY, state.scrollHeight])
 
-        // 处理tableScrollY <= 0的情况
-        if (tableScrollY <= 0) {
-            tableScrollY = 0
-        }
-
-        // 渲染的条数
-        const renderLen = useMemo<number>(() => {
-            let temp = 1
-            if (state.rowHeight && totalLen && tableScrollY) {
-                if (tableScrollY <= 0) {
-                    temp = 0
-                } else {
-                    let tempRenderLen =
-                        ((tableScrollY / state.rowHeight) | 0) + 1 + 2
-                    // console.log('tempRenderLen', tempRenderLen)
-                    temp = tempRenderLen > totalLen ? totalLen : tempRenderLen
-                }
-            }
-            return temp
-        }, [state.rowHeight, totalLen, tableScrollY])
-
-        // 渲染中的第一条
-        let start = state.rowHeight
-            ? (state.curScrollTop / state.rowHeight) | 0
-            : 0
-        // 偏移量
-        let offsetStart = state.rowHeight
-            ? state.curScrollTop % state.rowHeight
-            : 0
-
-        // 用来优化向上滚动出现的空白
-        if (
-            state.curScrollTop &&
-            state.rowHeight &&
-            state.curScrollTop > state.rowHeight
-        ) {
-            if (start > totalLen - renderLen) {
-                // 可能以后会做点操作
-                offsetStart = 0
-            } else if (start > 1) {
-                start = start - 1
-                offsetStart += state.rowHeight
-            }
-        } else {
-            start = 0
-        }
-
-        useEffect(() => {
-            // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
-            let parentNode = wrap_tableRef.current?.parentNode as HTMLElement
-            if (parentNode) {
-                parentNode.scrollTop = 0
-            }
-            dispatch({ type: 'reset' })
-        }, [totalLen])
-
-        useEffect(() => {
-            const debounceScroll = throttle((e) => {
-                let scrollTop: number = e?.target?.scrollTop ?? 0
-                if (scrollTop !== state.curScrollTop) {
-                    let scrollHeight = e.target.scrollHeight - tableScrollY
-                    dispatch({
-                        type: 'changeTrs',
-                        curScrollTop: scrollTop,
-                        scrollHeight,
-                        tableScrollY
-                    })
-                }
-            }, 60)
-
-            let ref = wrap_tableRef?.current?.parentNode as HTMLElement
-
-            if (ref) {
-                ref.addEventListener('scroll', debounceScroll)
-            }
-
-            return () => {
-                ref.removeEventListener('scroll', debounceScroll)
-            }
-        }, [
-            wrap_tableRef,
-            state.curScrollTop,
-            tableScrollY,
-            state.scrollHeight
-        ])
-
-        return (
-            <div
-                className="virtuallist"
-                ref={wrap_tableRef}
-                style={{
-                    width,
-                    position: 'relative',
-                    height: tableHeight,
-                    boxSizing: 'border-box',
-                    paddingTop: state.curScrollTop
+    return (
+        <div
+            className="virtuallist"
+            ref={wrap_tableRef}
+            style={{
+                width,
+                position: 'relative',
+                height: tableHeight,
+                boxSizing: 'border-box',
+                paddingTop: state.curScrollTop
+            }}
+        >
+            <ScrollContext.Provider
+                value={{
+                    dispatch,
+                    rowHeight: state.rowHeight,
+                    start,
+                    offsetStart,
+                    renderLen,
+                    totalLen
                 }}
             >
-                <ScrollContext.Provider
-                    value={{
-                        dispatch,
-                        rowHeight: state.rowHeight,
-                        start,
-                        offsetStart,
-                        renderLen,
-                        totalLen
+                <table
+                    {...rest}
+                    ref={tableRef}
+                    style={{
+                        ...rest_style,
+                        width,
+                        position: 'relative'
                     }}
                 >
-                    <table
-                        {...rest}
-                        ref={tableRef}
-                        style={{
-                            ...rest_style,
-                            width,
-                            position: 'relative'
-                        }}
-                    >
-                        {children}
-                    </table>
-                </ScrollContext.Provider>
-            </div>
-        )
-    }
-
-    return { VCell, VRow, VWrapper, VTable }
+                    {children}
+                </table>
+            </ScrollContext.Provider>
+        </div>
+    )
 }
 
 // ================导出===================
 export function VList(props: { height: number | string }): any {
-    let scrollY: number | string = props.height
-
-    const { VCell, VRow, VWrapper, VTable } = useReqComps(scrollY)
+    scrollY = props.height
 
     return {
         table: VTable,
