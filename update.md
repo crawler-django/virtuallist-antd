@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码 v0.4.4
+## 最新的代码 v0.4.5
+1. fix: 当scroll值有x: max-content且列数很少的时候, 会出现表头和内容行补齐的样式问题. (fix when scroll={x: 'max-content'} and little columns, content unable to align header.)
+
+## v0.4.4
 1. revert 0.4.3.
 
 ## v0.4.3 & v0.4.3-beta.0
