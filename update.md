@@ -4,6 +4,7 @@
 1. fix: 当scroll值有x: max-content且列数很少的时候, 会出现表头和内容行补齐的样式问题. (fix when scroll={x: 'max-content'} and little columns, content unable to align header.)
 
 reappear: (https://codesandbox.io/s/festive-worker-wc5wp for v0.4.4)
+
 already fix: (https://codesandbox.io/s/festive-worker-wc5wp for v0.4.5)
 
 ## v0.4.4
