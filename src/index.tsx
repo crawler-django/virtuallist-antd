@@ -287,7 +287,7 @@ function VTable(props): JSX.Element {
             className="virtuallist"
             ref={wrap_tableRef}
             style={{
-                width,
+                width: '100%',
                 position: 'relative',
                 height: tableHeight,
                 boxSizing: 'border-box',
