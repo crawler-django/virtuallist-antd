@@ -1,7 +1,10 @@
 ## 更新
 
-## 最新的代码 v0.4.6
-1. fix: #7 最新版antd 4.3.5 边框不显示的问题.
+## 最新的代码 v0.4.7
+1. fix: #8 处理rc-table v7.8.2的改动. 同时兼容上一个版本. (deal rc-table v7.8.2 change)
+
+## v0.4.6
+1. fix: #7 处理antd 4.3.5 边框不显示的问题. (fix bug: no border)
 
 ## v0.4.5
 1. fix: 当scroll值有x: max-content且列数很少的时候, 会出现表头和内容行补齐的样式问题. (fix when scroll={x: 'max-content'} and little columns, content unable to align header.)
