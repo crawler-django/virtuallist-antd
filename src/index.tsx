@@ -146,7 +146,15 @@ function VWrapper(props): JSX.Element {
     if (Array.isArray(contents) && contents.length) {
         tempNode = [
             children[0],
-            contents.slice(start, start + renderLen).map(item => item[0])
+            contents.slice(start, start + renderLen).map((item) => {
+                if (Array.isArray(item)) {
+                    // 兼容antd v4.3.5 --- rc-table 7.8.1及以下
+                    return item[0]
+                } else {
+                    // 处理antd ^v4.4.0  --- rc-table ^7.8.2
+                    return item
+                }
+            })
         ]
     } else {
         tempNode = children
