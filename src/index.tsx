@@ -85,6 +85,7 @@ const ScrollContext = createContext({
 
 // ==============常量 ================== //
 let scrollY: number | string = 0
+let reachEnd = null
 
 // =============组件 =================== //
 
@@ -268,6 +269,18 @@ function VTable(props): JSX.Element {
     useEffect(() => {
         const throttleScroll = throttle(e => {
             let scrollTop: number = e?.target?.scrollTop ?? 0
+            let scrollHeight: number = e?.target?.scrollHeight ?? 0
+            let clientHeight: number = e?.target?.clientHeight ?? 0
+
+            // 到底了
+            if (scrollTop === scrollHeight) {
+                // 没有滚动条的情况
+                reachEnd && reachEnd()
+            } else if (scrollTop + clientHeight === scrollHeight) {
+                // 有滚动条的情况
+                reachEnd && reachEnd()
+            }
+
             if (scrollTop !== state.curScrollTop) {
                 let scrollHeight = e.target.scrollHeight - tableScrollY
                 dispatch({
@@ -329,8 +342,9 @@ function VTable(props): JSX.Element {
 }
 
 // ================导出===================
-export function VList(props: { height: number | string }): any {
+export function VList(props: { height: number | string, onReachEnd?: () => void }): any {
     scrollY = props.height
+    reachEnd = props.onReachEnd
 
     return {
         table: VTable,
