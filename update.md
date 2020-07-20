@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码 v0.4.7
+## 最新的代码 v0.4.8-beta
+1. feat: support #9.
+
+## v0.4.7
 1. fix: #8 处理rc-table v7.8.2的改动. 同时兼容上一个版本. (deal rc-table v7.8.2 change)
 
 ## v0.4.6
