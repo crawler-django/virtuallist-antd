@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码 v0.4.8
+## 最新的代码 v0.4.9
+1. 将ISC协议改为MIT.
+
+## v0.4.8
 1. fix: 在length为0的时候, 没有更新totalLen的问题. (fix data length is 0, not update totalLen.)
 
 ## v0.4.8-beta
