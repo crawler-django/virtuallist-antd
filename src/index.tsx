@@ -188,7 +188,7 @@ function VTable(props): JSX.Element {
     )
 
     useEffect(() => {
-        if (children[1]?.props?.data?.length) {
+        if (isNumber(children[1]?.props?.data?.length)) {
             setTotalLen(children[1]?.props?.data?.length)
         }
     }, [children])
