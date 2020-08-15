@@ -22,7 +22,7 @@
     "antd-table无限滚动"
   ],
   "author": "crawler-django",
-  "license": "ISC",
+  "license": "MIT",
   "peerDependencies": {
     "react": "^16.12.0",
     "antd": "^4.0.0"
