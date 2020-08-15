@@ -1,7 +1,10 @@
 ## 更新
 
-## 最新的代码 v0.4.8-beta
-1. feat: support #9.
+## 最新的代码 v0.4.8
+1. fix: 在length为0的时候, 没有更新totalLen的问题. (fix data length is 0, not update totalLen.)
+
+## v0.4.8-beta
+1. feat: support #10.
 
 ## v0.4.7
 1. fix: #8 处理rc-table v7.8.2的改动. 同时兼容上一个版本. (deal rc-table v7.8.2 change)
