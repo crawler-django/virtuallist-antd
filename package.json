@@ -23,6 +23,11 @@
   ],
   "author": "crawler-django",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crawler-django/virtuallist-antd"
+  },
+  "homepage": "https://github.com/crawler-django/virtuallist-antd",
   "peerDependencies": {
     "antd": "^4.1.0",
     "react": "^16.8.0 || ^17.0.0"
