@@ -1,6 +1,6 @@
 {
   "name": "virtuallist-antd",
-  "version": "0.5.0-beta",
+  "version": "0.5.0-beta.0",
   "description": "virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -24,7 +24,8 @@
   "author": "crawler-django",
   "license": "MIT",
   "peerDependencies": {
-    "antd": "^4.1.0"
+    "antd": "^4.1.0",
+    "react": "^16.8.0 || ^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -46,7 +47,6 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-nested": "^4.2.1",
     "postcss-simple-vars": "^5.0.2",
-    "react": "^17.0.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.2",
@@ -64,6 +64,5 @@
   ],
   "resolutions": {
     "minimist": "^1.2.5"
-  },
-  "dependencies": {}
+  }
 }
