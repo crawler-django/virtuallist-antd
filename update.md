@@ -1,5 +1,8 @@
 ## 更新
 
+## 最新的代码(lastest) v0.5.1 
+1. update rep info.
+
 ## 最新的代码(lastest) v0.5.0
 1. update && adjust npm package.
 
