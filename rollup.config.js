@@ -46,6 +46,22 @@ export default {
       rollupCommonJSResolveHack: true,
       clean: true
     }),
-    commonjs()
+    commonjs({
+      include: 'node_modules/**',
+      namedExports: {
+        'node_modules/react/index.js': [
+          'cloneElement',
+          'createContext',
+          'Component',
+          'createElement',
+          'useContext',
+          'useRef',
+          'useEffect',
+          'useState',
+          'useReducer',
+          'useMemo'
+        ],
+      }
+    })
   ]
 }
