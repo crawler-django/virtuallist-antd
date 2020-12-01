@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码 v0.4.9
+## 最新的代码(lastest) v0.5.0
+1. update && adjust npm package.
+
+## v0.4.9
 1. 将ISC协议改为MIT.
 
 ## v0.4.8
