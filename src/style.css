@@ -4,7 +4,7 @@
     vertical-align: middle;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: inherit;
+    width: 100%;
 }
 
 .virtuallist .ant-table-tbody > tr > td.ant-table-row-expand-icon-cell > div {
