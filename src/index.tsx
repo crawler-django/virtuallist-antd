@@ -64,7 +64,7 @@ function reducer(state, action) {
         case 'reset':
             return {
                 ...state,
-                curScrollTop: 0,
+                curScrollTop: action?.ifScrollTopClear ? 0 : state.curScrollTop,
                 scrollHeight: 0
             }
         default:
@@ -265,9 +265,12 @@ function VTable(props): JSX.Element {
             if (parentNode) {
                 parentNode.scrollTop = 0
             }
-            dispatch({ type: 'reset' })
-        }
-        
+
+            dispatch({ type: 'reset', ifScrollTopClear: true })
+        } else {
+            // 不清空curScrollTop
+            dispatch({ type: 'reset', ifScrollTopClear: false })
+        }  
     }, [totalLen])
 
     useEffect(() => {
@@ -305,7 +308,7 @@ function VTable(props): JSX.Element {
         return () => {
             ref.removeEventListener('scroll', throttleScroll)
         }
-    }, [wrap_tableRef, state.curScrollTop, tableScrollY, state.scrollHeight])
+    }, [wrap_tableRef, state.curScrollTop, tableScrollY])
 
     return (
         <div
