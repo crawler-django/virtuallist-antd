@@ -260,10 +260,14 @@ function VTable(props): JSX.Element {
     useEffect(() => {
         // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
         let parentNode = wrap_tableRef.current?.parentNode as HTMLElement
-        if (parentNode) {
-            parentNode.scrollTop = 0
+
+        if (!reachEnd) {
+            if (parentNode) {
+                parentNode.scrollTop = 0
+            }
+            dispatch({ type: 'reset' })
         }
-        dispatch({ type: 'reset' })
+        
     }, [totalLen])
 
     useEffect(() => {
