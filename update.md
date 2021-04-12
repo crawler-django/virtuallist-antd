@@ -1,9 +1,15 @@
 ## 更新
 
-## 最新的代码(lastest) v0.5.1 
+## 最新的代码(lastest) v0.5.3
+1. feat: 扩展onReachEnd, 支持无限加载. (support load more data on a page.)
+
+## v0.5.2
+1. 将样式文件的width: inherit 改为 100%.
+
+## v0.5.1 
 1. update rep info.
 
-## 最新的代码(lastest) v0.5.0
+## v0.5.0
 1. update && adjust npm package.
 
 ## v0.4.9
