@@ -20,7 +20,7 @@ const initialState = {
     // 可滚动区域的高度
     scrollHeight: 0,
     // scrollY值
-    tableScrollY: 0
+    tableScrollY: 0,
 }
 
 function reducer(state, action) {
@@ -50,7 +50,7 @@ function reducer(state, action) {
                 ...state,
                 curScrollTop,
                 scrollHeight,
-                tableScrollY
+                tableScrollY,
             }
         // 初始化每行的高度, 表格总高度, 渲染的条数
         case 'initHeight':
@@ -58,14 +58,14 @@ function reducer(state, action) {
             let rowHeight = action.rowHeight
             return {
                 ...state,
-                rowHeight
+                rowHeight,
             }
 
         case 'reset':
             return {
                 ...state,
                 curScrollTop: action?.ifScrollTopClear ? 0 : state.curScrollTop,
-                scrollHeight: 0
+                scrollHeight: 0,
             }
         default:
             throw new Error()
@@ -80,12 +80,14 @@ const ScrollContext = createContext({
     offsetStart: 0,
     // =============
     rowHeight: initialState.rowHeight,
-    totalLen: 0
+    totalLen: 0,
 })
 
-// ==============常量 ================== //
+// ==============全局变量 ================== //
 let scrollY: number | string = 0
 let reachEnd = null
+let scrollNode: HTMLElement
+let rowItemHeight
 
 // =============组件 =================== //
 
@@ -94,9 +96,7 @@ function VCell(props): JSX.Element {
 
     return (
         <td {...restProps}>
-            <div>
-                {children}
-            </div>
+            <div>{children}</div>
         </td>
     )
 }
@@ -109,12 +109,13 @@ function VRow(props): JSX.Element {
     const trRef = useRef<HTMLTableRowElement>(null)
 
     useEffect(() => {
-        const initHeight = trRef => {
+        const initHeight = (trRef) => {
             if (trRef?.current?.offsetHeight && !rowHeight && totalLen) {
                 let tempRowHeight = trRef?.current?.offsetHeight ?? 0
+                rowItemHeight = tempRowHeight
                 dispatch({
                     type: 'initHeight',
-                    rowHeight: tempRowHeight
+                    rowHeight: tempRowHeight,
                 })
             }
         }
@@ -128,7 +129,7 @@ function VRow(props): JSX.Element {
             ref={trRef}
             style={{
                 height: rowHeight ? rowHeight : 'auto',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
             }}
         >
             {children}
@@ -155,7 +156,7 @@ function VWrapper(props): JSX.Element {
                     // 处理antd ^v4.4.0  --- rc-table ^7.8.2
                     return item
                 }
-            })
+            }),
         ]
     } else {
         tempNode = children
@@ -205,7 +206,8 @@ function VTable(props): JSX.Element {
     // table的scrollY值
     let tableScrollY = 0
     if (typeof scrollY === 'string') {
-        tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)?.offsetHeight
+        tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)
+            ?.offsetHeight
     } else {
         tableScrollY = scrollY
     }
@@ -258,23 +260,22 @@ function VTable(props): JSX.Element {
     }
 
     useEffect(() => {
-        // totalLen变化, 那么搜索条件一定变化, 数据也一定变化.
-        let parentNode = wrap_tableRef.current?.parentNode as HTMLElement
-
+        scrollNode = wrap_tableRef.current?.parentNode as HTMLElement
+        
         if (!reachEnd) {
-            if (parentNode) {
-                parentNode.scrollTop = 0
+            if (scrollNode) {
+                scrollNode.scrollTop = 0
             }
 
             dispatch({ type: 'reset', ifScrollTopClear: true })
         } else {
             // 不清空curScrollTop
             dispatch({ type: 'reset', ifScrollTopClear: false })
-        }  
+        }
     }, [totalLen])
 
     useEffect(() => {
-        const throttleScroll = throttle(e => {
+        const throttleScroll = throttle((e) => {
             let scrollTop: number = e?.target?.scrollTop ?? 0
             let scrollHeight: number = e?.target?.scrollHeight ?? 0
             let clientHeight: number = e?.target?.clientHeight ?? 0
@@ -294,7 +295,7 @@ function VTable(props): JSX.Element {
                     type: 'changeTrs',
                     curScrollTop: scrollTop,
                     scrollHeight,
-                    tableScrollY
+                    tableScrollY,
                 })
             }
         }, 60)
@@ -319,7 +320,7 @@ function VTable(props): JSX.Element {
                 position: 'relative',
                 height: tableHeight,
                 boxSizing: 'border-box',
-                paddingTop: state.curScrollTop
+                paddingTop: state.curScrollTop,
             }}
         >
             <ScrollContext.Provider
@@ -329,7 +330,7 @@ function VTable(props): JSX.Element {
                     start,
                     offsetStart,
                     renderLen,
-                    totalLen
+                    totalLen,
                 }}
             >
                 <table
@@ -338,7 +339,7 @@ function VTable(props): JSX.Element {
                     style={{
                         ...rest_style,
                         width,
-                        position: 'relative'
+                        position: 'relative',
                     }}
                 >
                     {children}
@@ -349,7 +350,10 @@ function VTable(props): JSX.Element {
 }
 
 // ================导出===================
-export function VList(props: { height: number | string, onReachEnd?: () => void }): any {
+export function VList(props: {
+    height: number | string
+    onReachEnd?: () => void
+}): any {
     scrollY = props.height
     reachEnd = props.onReachEnd
 
@@ -358,7 +362,30 @@ export function VList(props: { height: number | string, onReachEnd?: () => void 
         body: {
             wrapper: VWrapper,
             row: VRow,
-            cell: VCell
+            cell: VCell,
+        },
+    }
+}
+
+export function scrollTo(option: {
+    /**
+     * 行数
+     */
+    row?: number
+    /**
+     * y的偏移量
+     */
+    y?: number
+}) {
+    const { row, y } = option
+
+    if (row) {
+        if (row - 1 > 0) {
+            scrollNode.scrollTop = (row - 1) * (rowItemHeight ?? 0)
+        } else {
+            scrollNode.scrollTop = 0
         }
+    } else {
+        scrollNode.scrollTop = y ?? 0
     }
 }
