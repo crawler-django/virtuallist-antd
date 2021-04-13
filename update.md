@@ -3,7 +3,7 @@
 ## 最新的代码(lastest) v0.5.5
 1. feat: 支持scrollTo的导出. (support scrollTo)
 
-## 最新的代码(lastest) v0.5.4
+## v0.5.4
 1. feat: 扩展onReachEnd, 支持无限加载. (support load more data on a page.)
 
 ## v0.5.3
