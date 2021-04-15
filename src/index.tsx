@@ -280,10 +280,9 @@ function VTable(props): JSX.Element {
             let scrollHeight: number = e?.target?.scrollHeight ?? 0
             let clientHeight: number = e?.target?.clientHeight ?? 0
 
-            // 到底了
+            // 到底了 没有滚动条就不会触发reachEnd. 建议设置scrolly高度少点或者数据量多点.
             if (scrollTop === scrollHeight) {
-                // 没有滚动条的情况
-                reachEnd && reachEnd()
+                // reachEnd && reachEnd()
             } else if (scrollTop + clientHeight === scrollHeight) {
                 // 有滚动条的情况
                 reachEnd && reachEnd()
