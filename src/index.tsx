@@ -88,6 +88,7 @@ let scrollY: number | string = 0
 let reachEnd = null
 let scrollNode: HTMLElement
 let rowItemHeight
+let onScroll
 
 // =============组件 =================== //
 
@@ -288,6 +289,8 @@ function VTable(props): JSX.Element {
                 reachEnd && reachEnd()
             }
 
+            onScroll && onScroll()
+
             if (scrollTop !== state.curScrollTop) {
                 let scrollHeight = e.target.scrollHeight - tableScrollY
                 dispatch({
@@ -352,9 +355,11 @@ function VTable(props): JSX.Element {
 export function VList(props: {
     height: number | string
     onReachEnd?: () => void
+    onScroll?: () => void
 }): any {
     scrollY = props.height
     reachEnd = props.onReachEnd
+    onScroll = props.onScroll
 
     return {
         table: VTable,
