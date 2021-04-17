@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码(lastest) v0.5.5
+## 最新的代码(lastest) v0.5.6-beta.0
+1. 向外暴露onScroll.
+
+## v0.5.5
 1. feat: 支持scrollTo的导出. (support scrollTo)
 
 ## v0.5.4
