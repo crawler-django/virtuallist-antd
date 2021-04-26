@@ -1,7 +1,8 @@
 ## 更新
 
-## 最新的代码(lastest) v0.5.6-beta.0
-1. 向外暴露onScroll.
+## 最新的代码(lastest) v0.5.6
+1. 向外暴露onScroll. (export onscroll)
+2. 去掉多余的10padding. (remove excess 10 padding)
 
 ## v0.5.5
 1. feat: 支持scrollTo的导出. (support scrollTo)
