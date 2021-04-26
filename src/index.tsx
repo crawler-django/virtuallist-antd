@@ -199,7 +199,7 @@ function VTable(props): JSX.Element {
     const tableHeight = useMemo<string | number>(() => {
         let temp: string | number = 'auto'
         if (state.rowHeight && totalLen) {
-            temp = state.rowHeight * totalLen + 10
+            temp = state.rowHeight * totalLen
         }
         return temp
     }, [state.rowHeight, totalLen])
