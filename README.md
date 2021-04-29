@@ -79,6 +79,29 @@ ReactDom.render(<Example />, dom)
 
 ```
 
+## VList
+
+```tsx
+	VList({
+		height: number | string,  // 对应scrollY. 
+		onReachEnd: () => void, // 滚动条滚到底部触发api. (scrollbar to the end)
+		onScroll: () => void, // 滚动时触发的api. (triggered by scrolling)
+	})
+```
+
+## api
+
+```tsx
+	import { scrollTo } from 'virtuallist-antd'
+
+	// scrollTo
+	scrollTo({
+		row: number, // 行数. (row number)
+		y: number, // y偏移量. (offset Y)
+	})
+
+```
+
 ## License
 
 MIT © [crawler-django](https://github.com/crawler-django)
