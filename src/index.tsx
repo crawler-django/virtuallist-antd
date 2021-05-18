@@ -102,7 +102,7 @@ function VCell(props): JSX.Element {
     )
 }
 
-function VRow(props): JSX.Element {
+function VRow(props, ref): JSX.Element {
     const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
 
     const { children, ...restProps } = props
@@ -121,13 +121,13 @@ function VRow(props): JSX.Element {
             }
         }
 
-        initHeight(trRef)
+        initHeight(ref || trRef)
     }, [trRef, dispatch, rowHeight, totalLen])
 
     return (
         <tr
             {...restProps}
-            ref={trRef}
+            ref={ref || trRef}
             style={{
                 height: rowHeight ? rowHeight : 'auto',
                 boxSizing: 'border-box',
