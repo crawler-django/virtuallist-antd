@@ -105,7 +105,7 @@ function VCell(props): JSX.Element {
 function VRow(props, ref): JSX.Element {
     const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
 
-    const { children, ...restProps } = props
+    const { children, style, ...restProps } = props
 
     const trRef = useRef<HTMLTableRowElement>(null)
 
@@ -129,6 +129,7 @@ function VRow(props, ref): JSX.Element {
             {...restProps}
             ref={ref || trRef}
             style={{
+                ...style,
                 height: rowHeight ? rowHeight : 'auto',
                 boxSizing: 'border-box',
             }}
