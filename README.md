@@ -37,7 +37,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
 * [简单的例子(easy example)](https://codesandbox.io/s/festive-worker-wc5wp)
 * [简单的分页例子(easy pagination example)](https://codesandbox.io/s/gracious-resonance-tmw44)
 * [简单的resize例子(easy resize columns example)](https://codesandbox.io/s/vibrant-darkness-kvt56?file=/index.js)
-* [简单的单页加载例子(easy load data on single page that example)](https://codesandbox.io/s/reachend-wuxianjiazaixunigundong-y9nhd)
+* [简单的单页无限加载例子(easy infinite load data on single page that example)](https://codesandbox.io/s/reachend-wuxianjiazaixunigundong-y9nhd)
 * [简单的scrollTo例子(easy scrollTo example)](https://codesandbox.io/s/scrollto-jx10t)
 
 ## complex example
