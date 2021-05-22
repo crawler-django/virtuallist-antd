@@ -1,6 +1,9 @@
 ## 更新
 
-## 最新的代码(lastest) v0.5.6
+## 最新的代码(lastest) v0.5.7
+1. VRow向外暴露ref. (can do this like VRow(props, ref))
+
+## v0.5.6
 1. 向外暴露onScroll. (export onscroll)
 2. 去掉多余的10padding. (remove excess 10 padding)
 
