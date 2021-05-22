@@ -121,13 +121,13 @@ function VRow(props, ref): JSX.Element {
             }
         }
 
-        initHeight(ref || trRef)
+        initHeight(ref.hasOwnProperty('current') ? ref : trRef)
     }, [trRef, dispatch, rowHeight, totalLen])
 
     return (
         <tr
             {...restProps}
-            ref={ref || trRef}
+            ref={ref.hasOwnProperty('current') ? ref : trRef}
             style={{
                 ...style,
                 height: rowHeight ? rowHeight : 'auto',
