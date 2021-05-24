@@ -42,6 +42,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
 
 ## complex example
 * [拖拽行(drag row)](https://codesandbox.io/s/drag-row-1fjg4?file=/index.js)
+* [拖拽手柄列(drag row in handle-icon)](https://codesandbox.io/s/tuozhuaishoubinglie-antd4156-forked-1d6z1?file=/index.js)
 
 ## Install
 
