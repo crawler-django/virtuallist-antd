@@ -32,16 +32,6 @@ function reducer(state, action) {
             let scrollHeight = action.scrollHeight
             let tableScrollY = action.tableScrollY
 
-            if (scrollHeight <= 0) {
-                scrollHeight = 0
-            }
-
-            if (state.scrollHeight !== 0) {
-                if (tableScrollY === state.tableScrollY) {
-                    scrollHeight = state.scrollHeight
-                }
-            }
-
             if (state.scrollHeight && curScrollTop > state.scrollHeight) {
                 curScrollTop = state.scrollHeight
             }
@@ -167,7 +157,6 @@ function VWrapper(props): JSX.Element {
     return (
         <tbody
             {...restProps}
-            style={{ transform: `translateY(-${offsetStart}px)` }}
         >
             {tempNode}
         </tbody>
@@ -252,7 +241,7 @@ function VTable(props): JSX.Element {
     ) {
         if (start > totalLen - renderLen) {
             // 可能以后会做点操作
-            offsetStart = 0
+            // offsetStart = 0
         } else if (start > 1) {
             start = start - 1
             offsetStart += state.rowHeight
@@ -285,22 +274,20 @@ function VTable(props): JSX.Element {
             // 到底了 没有滚动条就不会触发reachEnd. 建议设置scrolly高度少点或者数据量多点.
             if (scrollTop === scrollHeight) {
                 // reachEnd && reachEnd()
-            } else if (scrollTop + clientHeight === scrollHeight) {
+            } else if (scrollTop + clientHeight >= scrollHeight) {
                 // 有滚动条的情况
                 reachEnd && reachEnd()
             }
 
             onScroll && onScroll()
-
-            if (scrollTop !== state.curScrollTop) {
-                let scrollHeight = e.target.scrollHeight - tableScrollY
-                dispatch({
-                    type: 'changeTrs',
-                    curScrollTop: scrollTop,
-                    scrollHeight,
-                    tableScrollY,
-                })
-            }
+            
+            dispatch({
+                type: 'changeTrs',
+                curScrollTop: scrollTop,
+                scrollHeight,
+                tableScrollY,
+            })
+            
         }, 60)
 
         let ref = wrap_tableRef?.current?.parentNode as HTMLElement
@@ -312,7 +299,7 @@ function VTable(props): JSX.Element {
         return () => {
             ref.removeEventListener('scroll', throttleScroll)
         }
-    }, [wrap_tableRef, state.curScrollTop, tableScrollY])
+    }, [wrap_tableRef, tableScrollY])
 
     return (
         <div
@@ -343,6 +330,7 @@ function VTable(props): JSX.Element {
                         ...rest_style,
                         width,
                         position: 'relative',
+                        transform: `translateY(-${offsetStart}px)`
                     }}
                 >
                     {children}
