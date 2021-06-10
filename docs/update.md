@@ -1,4 +1,4 @@
-## 更新
+## update.md
 
 ## 最新的代码(lastest) v0.5.8
 1. fix: 处理滚动条滚到最后面的时候 会出现抖动的问题 & 删除无用代码. (fix bug that data shake when scroll on final)
