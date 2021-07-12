@@ -62,6 +62,10 @@ function reducer(state, action) {
     }
 }
 
+// ==============全局变量 ================== //
+const DEFAULT_VID = 'vtable'
+const vidMap = new Map()
+
 // ===============context ============== //
 const ScrollContext = createContext({
     dispatch: undefined,
@@ -71,14 +75,8 @@ const ScrollContext = createContext({
     // =============
     rowHeight: initialState.rowHeight,
     totalLen: 0,
+    vid: DEFAULT_VID
 })
-
-// ==============全局变量 ================== //
-let scrollY: number | string = 0
-let reachEnd = null
-let scrollNode: HTMLElement
-let rowItemHeight
-let onScroll
 
 // =============组件 =================== //
 
@@ -93,7 +91,7 @@ function VCell(props): JSX.Element {
 }
 
 function VRow(props, ref): JSX.Element {
-    const { dispatch, rowHeight, totalLen } = useContext(ScrollContext)
+    const { dispatch, rowHeight, totalLen, vid } = useContext(ScrollContext)
 
     const { children, style, ...restProps } = props
 
@@ -103,7 +101,10 @@ function VRow(props, ref): JSX.Element {
         const initHeight = (trRef) => {
             if (trRef?.current?.offsetHeight && !rowHeight && totalLen) {
                 let tempRowHeight = trRef?.current?.offsetHeight ?? 0
-                rowItemHeight = tempRowHeight
+                vidMap.set(vid, {
+                    ...vidMap.get(vid),
+                    rowItemHeight: tempRowHeight,
+                })
                 dispatch({
                     type: 'initHeight',
                     rowHeight: tempRowHeight,
@@ -163,9 +164,11 @@ function VWrapper(props): JSX.Element {
     )
 }
 
-function VTable(props): JSX.Element {
+function VTable(props, tempObj): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
+
+    const { vid, scrollY, reachEnd, onScroll } = tempObj ?? {}
 
     // const [curScrollTop, setCurScrollTop] = useState(0)
 
@@ -178,6 +181,13 @@ function VTable(props): JSX.Element {
     const [totalLen, setTotalLen] = useState<number>(
         children[1]?.props?.data?.length ?? 0
     )
+
+    useEffect(() => {
+        return () => {
+            // console.log('销毁', vid)
+            vidMap.delete(vid)
+        }
+    }, [])
 
     useEffect(() => {
         if (isNumber(children[1]?.props?.data?.length)) {
@@ -251,7 +261,11 @@ function VTable(props): JSX.Element {
     }
 
     useEffect(() => {
-        scrollNode = wrap_tableRef.current?.parentNode as HTMLElement
+        const scrollNode = wrap_tableRef.current?.parentNode as HTMLElement
+        vidMap.set(vid, {
+            ...vidMap.get(vid),
+            scrollNode,
+        })
         
         if (!reachEnd) {
             if (scrollNode) {
@@ -321,6 +335,7 @@ function VTable(props): JSX.Element {
                     offsetStart,
                     renderLen,
                     totalLen,
+                    vid,
                 }}
             >
                 <table
@@ -340,18 +355,43 @@ function VTable(props): JSX.Element {
     )
 }
 
+/**
+ * put tempObj in vtable.
+ * @param tempObj 
+ * @returns 
+ */
+const transformTable = (tempObj) => {
+    return (props) => VTable(props, tempObj)
+}
+
 // ================导出===================
 export function VList(props: {
     height: number | string
     onReachEnd?: () => void
     onScroll?: () => void
+    vid?: string
 }): any {
-    scrollY = props.height
-    reachEnd = props.onReachEnd
-    onScroll = props.onScroll
+    
+    const _vid = props.vid ?? DEFAULT_VID
+
+    let TableComponent
+
+    if (!vidMap.has(_vid)) {
+        TableComponent = transformTable({
+            vid: _vid,
+            scrollY: props.height,
+            reachEnd: props.onReachEnd,
+            onScroll: props.onScroll,
+        })
+        vidMap.set(_vid, {
+            components: TableComponent,
+        })
+    } else {
+        TableComponent = vidMap.get(_vid)?.components
+    }
 
     return {
-        table: VTable,
+        table: TableComponent,
         body: {
             wrapper: VWrapper,
             row: VRow,
@@ -369,8 +409,14 @@ export function scrollTo(option: {
      * y的偏移量
      */
     y?: number
+    /**
+     * 同一页面拥有多个虚拟表格的时候的唯一标识.
+     */
+    vid?: string
 }) {
-    const { row, y } = option
+    const { row, y, vid = DEFAULT_VID } = option
+
+    const { scrollNode, rowItemHeight } = vidMap.get(vid)
 
     if (row) {
         if (row - 1 > 0) {

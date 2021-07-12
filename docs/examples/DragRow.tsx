@@ -18,6 +18,22 @@ import React, {
   const vlistComponent = VList({
 	height: 500
   });
+
+  const generateData = () => {
+	let arr = [];
+
+	for (let i = 0; i < 100; i++) {
+	  arr.push({
+		key: i,
+		date: "天道轮回".repeat(Math.floor(Math.random() * 10)),
+		amount: 120,
+		type: "income",
+		note: "transfer"
+	  });
+	}
+
+	return arr;
+  }
   
   const DragableBodyRow = (props) => {
 	const { index, moveRow, className, style, ...restProps } = props;
@@ -168,21 +184,7 @@ import React, {
 	  };
 	}, []);
   
-	const [data, setData] = useState(() => {
-	  let arr = [];
-  
-	  for (let i = 0; i < 100; i++) {
-		arr.push({
-		  key: i,
-		  date: "天道轮回".repeat(Math.floor(Math.random() * 10)),
-		  amount: 120,
-		  type: "income",
-		  note: "transfer"
-		});
-	  }
-  
-	  return arr;
-	});
+	const [data, setData] = useState(generateData());
   
 	const moveRow = useCallback(
 	  (dragIndex, hoverIndex) => {
