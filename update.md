@@ -1,7 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.0-beta.0
+## 最新的代码(lastest) v0.6.0-beta.1
 1. fix: 处理存在多个虚拟表格的时候, 全局属性会覆盖的问题. (fix bug that global attr is overridden when exist different virtual tables)
+## v0.6.0-beta.0
+1. 发布错误
 ## v0.5.8
 1. fix: 处理滚动条滚到最后面的时候 会出现抖动的问题 & 删除无用代码. (fix bug that data shake when scroll on final)
 
