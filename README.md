@@ -90,7 +90,7 @@ ReactDom.render(<Example />, dom)
 		height: number | string,  // (必填) 对应scrollY. 
 		onReachEnd: () => void, // (可选) 滚动条滚到底部触发api. (scrollbar to the end)
 		onScroll: () => void, // (可选) 滚动时触发的api. (triggered by scrolling)
-		vid: string, // (可选, 如果同一页面存在多个虚拟表格时必填.) 唯一标识. (unique vid, required when exist more vitual table)
+		vid: string, // (可选, 如果同一页面存在多个虚拟表格时必填.) 唯一标识. (unique vid, required when exist more vitual table on a page)
 	})
 ```
 

@@ -62,7 +62,7 @@ function reducer(state, action) {
     }
 }
 
-// ==============全局变量 ================== //
+// ==============全局常量 ================== //
 const DEFAULT_VID = 'vtable'
 const vidMap = new Map()
 
@@ -164,11 +164,11 @@ function VWrapper(props): JSX.Element {
     )
 }
 
-function VTable(props, tempObj): JSX.Element {
+function VTable(props, otherParams): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    const { vid, scrollY, reachEnd, onScroll } = tempObj ?? {}
+    const { vid, scrollY, reachEnd, onScroll } = otherParams ?? {}
 
     // const [curScrollTop, setCurScrollTop] = useState(0)
 
