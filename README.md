@@ -87,9 +87,10 @@ ReactDom.render(<Example />, dom)
 
 ```tsx
 	VList({
-		height: number | string,  // 对应scrollY. 
-		onReachEnd: () => void, // 滚动条滚到底部触发api. (scrollbar to the end)
-		onScroll: () => void, // 滚动时触发的api. (triggered by scrolling)
+		height: number | string,  // (必填) 对应scrollY. 
+		onReachEnd: () => void, // (可选) 滚动条滚到底部触发api. (scrollbar to the end)
+		onScroll: () => void, // (可选) 滚动时触发的api. (triggered by scrolling)
+		vid: string, // (可选, 如果同一页面存在多个虚拟表格时必填.) 唯一标识. (unique vid, required when exist more vitual table)
 	})
 ```
 
@@ -102,6 +103,7 @@ ReactDom.render(<Example />, dom)
 	scrollTo({
 		row: number, // 行数. (row number)
 		y: number, // y偏移量. (offset Y)
+		vid: string, // 对应VList的vid. (same as VList vid)
 	})
 
 ```
