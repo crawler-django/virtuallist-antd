@@ -1,6 +1,6 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.0-beta.1
+## 最新的代码(lastest) v0.6.0 && v0.6.0-beta.1
 1. fix: 处理存在多个虚拟表格的时候, 全局属性会覆盖的问题. (fix bug that global attr is overridden when exist different virtual tables)
 ## v0.6.0-beta.0
 1. 发布错误
