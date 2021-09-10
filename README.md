@@ -8,7 +8,7 @@
 
 > 版本更新记录(update detail): https://github.com/crawler-django/virtuallist-antd/blob/master/update.md
 
-virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table. 暂时不会支持树形结构的表格功能. (not support tree data)
+virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table. 支持antd树形表格, antd版本要在4.17.0及以上. (support tree data, after antd v4.17.0)
 
 * 已经支持4.0的antd-table.(4.x ---- v0.3.0后,  3.x ---- v0.2.8.) 
 
@@ -39,6 +39,7 @@ virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚
 * [简单的resize例子(easy resize columns example)](https://codesandbox.io/s/vibrant-darkness-kvt56?file=/index.js)
 * [简单的单页无限加载例子(easy infinite load data on single page that example)](https://codesandbox.io/s/reachend-wuxianjiazaixunigundong-y9nhd)
 * [简单的scrollTo例子(easy scrollTo example)](https://codesandbox.io/s/scrollto-jx10t)
+* [简单的树形表格例子(easy tree table example)](https://codesandbox.io/s/reachend-wuxianjiazaixunigundong-forked-63iom?file=/src/index.tsx)
 
 ## complex example
 * [拖拽行(drag row)](https://codesandbox.io/s/drag-row-1fjg4?file=/index.js)
