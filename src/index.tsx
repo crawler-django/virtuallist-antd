@@ -249,13 +249,8 @@ function VTable(props, otherParams): JSX.Element {
         state.rowHeight &&
         state.curScrollTop > state.rowHeight
     ) {
-        if (start > totalLen - renderLen) {
-            // 可能以后会做点操作
-            // offsetStart = 0
-        } else if (start > 1) {
-            start = start - 1
-            offsetStart += state.rowHeight
-        }
+        start = start - 1 
+        offsetStart += state.rowHeight
     } else {
         start = 0
     }
