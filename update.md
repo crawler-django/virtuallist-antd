@@ -1,6 +1,8 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.2
+## 最新的代码(lastest) v0.6.3-beta.0
+1. fix: 树形表格看不全数据的问题. (fix tree table bug of incomplete data)
+## v0.6.2
 1. fix: 树形表格最后行有很多子数据的时候, 滚动会出现问题. (fix tree table bug)
 ## v0.6.1
 1. 去掉start的判断. (remove the judgment of the variable start)
