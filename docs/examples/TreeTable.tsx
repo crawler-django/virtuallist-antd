@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import ReactDom from "react-dom";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { VList } from "../../src/index";
 
 import "antd/dist/antd.css";
@@ -102,45 +102,64 @@ const generateData = () => {
   return temp;
 };
 
-const data = generateData();
+const initData = generateData()
 
-class TreeTable extends React.Component {
-  handleClick = (record, e) => {
+function TreeTable() {
+
+  const [data, setData] = useState(initData)
+
+  const [flag, setFlag] = useState(false)
+
+  const handleClick = (record, e) => {
     e.preventDefault();
     console.log(record.a);
   };
 
-  render() {
-    const columns = [
-      { title: "title1", dataIndex: "a", key: "a", width: 150 },
-      { title: "title2", dataIndex: "b", key: "b", width: 200 },
-      { title: "title3", dataIndex: "c", key: "c", width: 200 },
-      {
-        title: "Operations",
-        dataIndex: "",
-        width: 200,
-        key: "x",
-        render: (text, record) => (
-          <a href="#" onClick={(e) => this.handleClick(record, e)}>
-            click {record.a}
-          </a>
-        )
+  const handleChangeClick = useCallback(() => {
+    setFlag(pre => {
+      if (!pre) {
+        setData([])
+        
+      } else {
+        setData(initData)
       }
-    ];
-    return (
-      <div>
-        <h2>sub table</h2>
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey={(record) => record.a}
-          pagination={false}
-          scroll={{ y: 500, x: "100%" }}
-          components={VList({ height: 500 })}
-        />
-      </div>
-    );
-  }
+
+      return !pre
+    })
+    
+  }, [])
+
+  const columns = [
+    { title: "title1", dataIndex: "a", key: "a", width: 150 },
+    { title: "title2", dataIndex: "b", key: "b", width: 200 },
+    { title: "title3", dataIndex: "c", key: "c", width: 200 },
+    {
+      title: "Operations",
+      dataIndex: "",
+      width: 200,
+      key: "x",
+      render: (text, record) => (
+        <a href="#" onClick={(e) => handleClick(record, e)}>
+          click {record.a}
+        </a>
+      )
+    }
+  ];
+
+  return (
+    <div>
+      <h2>sub table</h2>
+      <Button onClick={handleChangeClick}>变换数量</Button>
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey={(record) => record.a}
+        pagination={false}
+        scroll={{ y: 500, x: "100%" }}
+        components={VList({ height: 500 })}
+      />
+    </div>
+  );
 }
 
 export default TreeTable

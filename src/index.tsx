@@ -21,6 +21,8 @@ const initialState = {
     scrollHeight: 0,
     // scrollY值
     tableScrollY: 0,
+    // 总行数
+    totalLen: 0,
 }
 
 function reducer(state, action) {
@@ -49,6 +51,13 @@ function reducer(state, action) {
             return {
                 ...state,
                 rowHeight,
+            }
+        // 更改totalLen
+        case 'changeTotalLen':
+            let totalLen = action.totalLen
+            return {
+                ...state,
+                totalLen
             }
 
         case 'reset':
@@ -133,9 +142,23 @@ function VRow(props, ref): JSX.Element {
 function VWrapper(props): JSX.Element {
     const { children, ...restProps } = props
 
-    const { renderLen, start } = useContext(ScrollContext)
+    const { renderLen, start, dispatch, totalLen, vid } = useContext(ScrollContext)
 
     let contents = children[1]
+
+    useEffect(() => {
+        if (totalLen !== contents?.length && totalLen) {
+            dispatch({
+                type: 'changeTotalLen',
+                totalLen: contents?.length
+            })
+
+            vidMap.set(vid, {
+                ...vidMap.get(vid),
+                notRefresh: true
+            })
+        }
+    }, [totalLen, contents])
 
     let tempNode = null
     if (Array.isArray(contents) && contents.length) {
@@ -170,8 +193,6 @@ function VTable(props, otherParams): JSX.Element {
 
     const { vid, scrollY, reachEnd, onScroll } = otherParams ?? {}
 
-    // const [curScrollTop, setCurScrollTop] = useState(0)
-
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const wrap_tableRef = useRef<HTMLDivElement>(null)
@@ -183,6 +204,12 @@ function VTable(props, otherParams): JSX.Element {
     )
 
     useEffect(() => {
+        if (state.totalLen) {
+            setTotalLen(state.totalLen)
+        }
+    }, [state.totalLen])
+
+    useEffect(() => {
         return () => {
             // console.log('销毁', vid)
             vidMap.delete(vid)
@@ -190,10 +217,11 @@ function VTable(props, otherParams): JSX.Element {
     }, [])
 
     useEffect(() => {
+        console.log('children变了')
         if (isNumber(children[1]?.props?.data?.length)) {
             setTotalLen(children[1]?.props?.data?.length)
         }
-    }, [children])
+    }, [children[1].props.data])
 
     // table总高度
     const tableHeight = useMemo<string | number>(() => {
@@ -250,10 +278,10 @@ function VTable(props, otherParams): JSX.Element {
         state.curScrollTop > state.rowHeight
     ) {
         if (start > totalLen - renderLen) {
-            const temp = totalLen - renderLen
-            const exceedCount = start - temp
-            start = temp
-            offsetStart += state.rowHeight * exceedCount
+            // const temp = totalLen - renderLen
+            // const exceedCount = start - temp
+            // start = temp
+            // offsetStart += state.rowHeight * exceedCount
         } else if (start > 1) {
             start = start - 1
             offsetStart += state.rowHeight
@@ -265,21 +293,28 @@ function VTable(props, otherParams): JSX.Element {
 
     useEffect(() => {
         const scrollNode = wrap_tableRef.current?.parentNode as HTMLElement
-        vidMap.set(vid, {
-            ...vidMap.get(vid),
-            scrollNode,
-        })
-        
-        if (!reachEnd) {
-            if (scrollNode) {
-                scrollNode.scrollTop = 0
-            }
 
-            dispatch({ type: 'reset', ifScrollTopClear: true })
-        } else {
-            // 不清空curScrollTop
-            dispatch({ type: 'reset', ifScrollTopClear: false })
+        const obj = vidMap.get(vid)
+
+        if (!obj.notRefresh) {
+            if (!reachEnd) {
+                if (scrollNode) {
+                    scrollNode.scrollTop = 0
+                }
+    
+                dispatch({ type: 'reset', ifScrollTopClear: true })
+            } else {
+                // 不清空curScrollTop
+                dispatch({ type: 'reset', ifScrollTopClear: false })
+            }
         }
+
+        vidMap.set(vid, {
+            ...obj,
+            scrollNode,
+            notRefresh: false
+        })
+
     }, [totalLen])
 
     useEffect(() => {
