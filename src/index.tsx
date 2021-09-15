@@ -133,7 +133,7 @@ function VRow(props, ref): JSX.Element {
 function VWrapper(props): JSX.Element {
     const { children, ...restProps } = props
 
-    const { renderLen, start, offsetStart } = useContext(ScrollContext)
+    const { renderLen, start } = useContext(ScrollContext)
 
     let contents = children[1]
 
@@ -249,8 +249,16 @@ function VTable(props, otherParams): JSX.Element {
         state.rowHeight &&
         state.curScrollTop > state.rowHeight
     ) {
-        start = start - 1 
-        offsetStart += state.rowHeight
+        if (start > totalLen - renderLen) {
+            const temp = totalLen - renderLen
+            const exceedCount = start - temp
+            start = temp
+            offsetStart += state.rowHeight * exceedCount
+        } else if (start > 1) {
+            start = start - 1
+            offsetStart += state.rowHeight
+        }
+        
     } else {
         start = 0
     }
