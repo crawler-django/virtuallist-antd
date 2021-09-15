@@ -1,6 +1,8 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.1
+## 最新的代码(lastest) v0.6.2
+1. fix: 树形表格最后行有很多子数据的时候, 滚动会出现问题. (fix tree table bug.)
+## v0.6.1
 1. 去掉start的判断. (remove the judgment of the variable start)
 ## v0.6.0
 1. fix: 处理存在多个虚拟表格的时候, 全局属性会覆盖的问题. (fix bug that global attr is overridden when exist different virtual tables)
