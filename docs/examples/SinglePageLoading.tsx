@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { Button, Table } from "antd";
-import { VList, scrollTo } from "../../src/index";
+import React, { useState, useCallback, useMemo } from 'react';
+import { Button, Table } from 'antd';
+import { VList, scrollTo } from '../../src/index';
 import 'antd/dist/antd.css';
 
 const generateData = () => {
-  let tempDataSource = [];
-  for (let i = 0; i < 50; i++) {
+  const tempDataSource = [];
+  for (let i = 0; i < 50; i += 1) {
     tempDataSource.push({
       company_name: `aaa${i} 富士山下的你好美 你知道吗`,
       company_name1: `aaa${i} index index index index`,
@@ -14,7 +14,7 @@ const generateData = () => {
       company_name3: `aaa${i} company company index index`,
       company_name4: `aaa${i} company company company index`,
       company_name5: `aaa${i} company company company company`,
-      company_name6: `aaa${i} company index index company`
+      company_name6: `aaa${i} company index index company`,
     });
   }
 
@@ -30,29 +30,29 @@ function SinglePageLoading() {
 
   const columns: any = [
     {
-      title: "序号",
-      key: "id",
-      fixed: "left",
+      title: '序号',
+      key: 'id',
+      fixed: 'left',
       render(text, record, index) {
         return index + 1;
       },
-      width: 100
+      width: 100,
     },
     {
-      title: "公司",
-      dataIndex: "company_name",
-      width: 200
+      title: '公司',
+      dataIndex: 'company_name',
+      width: 200,
     },
     {
-      title: "公司1",
-      dataIndex: "company_name1",
-      width: 200
+      title: '公司1',
+      dataIndex: 'company_name1',
+      width: 200,
     },
     {
-      title: "公司2",
-      dataIndex: "company_name2",
-      width: 200
-    }
+      title: '公司2',
+      dataIndex: 'company_name2',
+      width: 200,
+    },
   ];
 
   const handleReachEnd1 = useCallback(() => {
@@ -77,20 +77,16 @@ function SinglePageLoading() {
     }, 1000);
   }, []);
 
-  const components1 = useMemo(() => {
-    return VList({
-      height: 500,
-      onReachEnd: handleReachEnd1,
-      vid: 'first'
-    })
-  }, [])
-  const components2 = useMemo(() => {
-    return VList({
-      height: 500,
-      onReachEnd: handleReachEnd2,
-      vid: 'second'
-    })
-  }, [])
+  const components1 = useMemo(() => VList({
+    height: 500,
+    onReachEnd: handleReachEnd1,
+    vid: 'first',
+  }), [handleReachEnd1]);
+  const components2 = useMemo(() => VList({
+    height: 500,
+    onReachEnd: handleReachEnd2,
+    vid: 'second',
+  }), [handleReachEnd2]);
 
   return (
     <>
@@ -101,7 +97,7 @@ function SinglePageLoading() {
         pagination={false}
         loading={loading1}
         scroll={{ y: 500, x: '100%' }}
-        rowKey={"company_name"}
+        rowKey="company_name"
         components={components1}
       />
       <Button onClick={() => scrollTo({ vid: 'second', y: 500 })}>跳到500</Button>
@@ -111,11 +107,11 @@ function SinglePageLoading() {
         pagination={false}
         loading={loading2}
         scroll={{ y: 500, x: '100%' }}
-        rowKey={"company_name"}
+        rowKey="company_name"
         components={components2}
       />
     </>
   );
 }
 
-export default SinglePageLoading
+export default SinglePageLoading;

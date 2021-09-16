@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from "react";
-import ReactDom from "react-dom";
-import { Button, Table } from "antd";
-import { VList } from "../../src/index";
+import React, { useCallback, useState } from 'react';
+import { Button, Table } from 'antd';
+import { VList } from '../../src/index';
 
-import "antd/dist/antd.css";
+import 'antd/dist/antd.css';
 
 const generateData = () => {
   const temp = [];
@@ -11,139 +10,144 @@ const generateData = () => {
   for (let i = 0; i < 100; i += 1) {
     temp.push({
       a: i,
-      b: "bbbb".repeat(Math.floor(Math.random() * 10)),
+      b: 'bbbb'.repeat(Math.floor(Math.random() * 10)),
       children: [
         {
           a: `${i}_${i}`,
-          b: "test",
+          b: 'test',
           children: [
             {
               a: `${i}_${i}_${i}`,
-              b: "testtest"
+              b: 'testtest',
             },
             {
               a: `${i}_${i}_${i}_${i}`,
-              b: "testtest"
+              b: 'testtest',
             },
             {
-              a: `#`,
-              b: "testtest"
+              a: '#',
+              b: 'testtest',
             },
             {
-              a: `##`,
-              b: "testtest"
+              a: '##',
+              b: 'testtest',
             },
             {
-              a: `###`,
-              b: "testtest"
+              a: '###',
+              b: 'testtest',
             },
             {
-              a: `####`,
-              b: "testtest"
+              a: '####',
+              b: 'testtest',
             },
             {
-              a: `321`,
-              b: "testtest"
+              a: '321',
+              b: 'testtest',
             },
             {
-              a: `432143`,
-              b: "testtest"
+              a: '432143',
+              b: 'testtest',
             },
             {
-              a: `fdsaf`,
-              b: "testtest"
+              a: 'fdsaf',
+              b: 'testtest',
             },
             {
-              a: `qwew`,
-              b: "testtest"
+              a: 'qwew',
+              b: 'testtest',
             },
             {
-              a: `nm`,
-              b: "testtest"
+              a: 'nm',
+              b: 'testtest',
             },
             {
-              a: `ds`,
-              b: "testtest"
+              a: 'ds',
+              b: 'testtest',
             },
             {
-              a: `cxzc`,
-              b: "testtest"
+              a: 'cxzc',
+              b: 'testtest',
             },
             {
-              a: `vxz`,
-              b: "testtest"
+              a: 'vxz',
+              b: 'testtest',
             },
             {
-              a: `poi`,
-              b: "testtest"
+              a: 'poi',
+              b: 'testtest',
             },
             {
-              a: `posss`,
-              b: "testtest"
+              a: 'posss',
+              b: 'testtest',
             },
             {
-              a: `xxxxx`,
-              b: "testtest"
+              a: 'xxxxx',
+              b: 'testtest',
             },
             {
-              a: `sssss}`,
-              b: "testtest"
+              a: 'sssss}',
+              b: 'testtest',
             },
             {
-              a: `llll`,
-              b: "testtest"
+              a: 'llll',
+              b: 'testtest',
             },
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     });
   }
 
   return temp;
 };
 
-const initData = generateData()
+const initData = generateData();
 
 function TreeTable() {
+  const [data, setData] = useState(initData);
 
-  const [data, setData] = useState(initData)
-
-  const [flag, setFlag] = useState(false)
+  // eslint-disable-next-line no-unused-vars
+  const [flag, setFlag] = useState(false);
 
   const handleClick = (record, e) => {
     e.preventDefault();
-    console.log(record.a);
   };
 
   const handleChangeClick = useCallback(() => {
-    setFlag(pre => {
+    setFlag((pre) => {
       if (!pre) {
-        setData([])
-        
+        setData([]);
       } else {
-        setData(initData)
+        setData(initData);
       }
 
-      return !pre
-    })
-    
-  }, [])
+      return !pre;
+    });
+  }, []);
 
   const columns = [
-    { title: "title1", dataIndex: "a", key: "a", width: 150 },
-    { title: "title2", dataIndex: "b", key: "b", width: 200 },
-    { title: "title3", dataIndex: "c", key: "c", width: 200 },
     {
-      title: "Operations",
-      dataIndex: "",
+      title: 'title1', dataIndex: 'a', key: 'a', width: 150,
+    },
+    {
+      title: 'title2', dataIndex: 'b', key: 'b', width: 200,
+    },
+    {
+      title: 'title3', dataIndex: 'c', key: 'c', width: 200,
+    },
+    {
+      title: 'Operations',
+      dataIndex: '',
       width: 200,
-      key: "x",
+      key: 'x',
       render: (text, record) => (
         <a href="#" onClick={(e) => handleClick(record, e)}>
-          click {record.a}
+          click
+          {' '}
+          {record.a}
         </a>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -155,11 +159,11 @@ function TreeTable() {
         dataSource={data}
         rowKey={(record) => record.a}
         pagination={false}
-        scroll={{ y: 500, x: "100%" }}
+        scroll={{ y: 500, x: '100%' }}
         components={VList({ height: 500 })}
       />
     </div>
   );
 }
 
-export default TreeTable
+export default TreeTable;
