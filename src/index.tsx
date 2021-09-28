@@ -295,9 +295,9 @@ function VTable(props: any, otherParams): JSX.Element {
   useEffect(() => {
     const scrollNode = wrap_tableRef.current?.parentNode as HTMLElement;
 
-    const obj = vidMap.get(vid);
+    const obj = vidMap.get(vid) ?? {};
 
-    if (!obj.notRefresh) {
+    if (!obj?.notRefresh) {
       // 滚动条滚到最上面
       if (!reachEnd) {
         if (scrollNode) {
