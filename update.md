@@ -1,6 +1,6 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.3-beta.2
+## 最新的代码(lastest) v0.6.3
 1. fix: 树形表格看不全数据的问题. (fix tree table bug of incomplete data)
 2. fix: fix offsetStart bug that multiple rows become 0 rows
 3. fix: 处理notRrefresh报错问题.
