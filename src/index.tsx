@@ -217,7 +217,7 @@ function VTable(props: any, otherParams): JSX.Element {
     if (state.totalLen) {
       setTotalLen(state.totalLen);
     }
-  }, [state]);
+  }, [state.totalLen]);
 
   useEffect(() => {
     return () => {
@@ -228,19 +228,13 @@ function VTable(props: any, otherParams): JSX.Element {
   // 数据变更
   useEffect(() => {
     if (isNumber(children[1]?.props?.data?.length)) {
-      setTotalLen(children[1]?.props?.data?.length);
+      dispatch({
+        type: 'changeTotalLen',
+        totalLen: children[1]?.props?.data?.length ?? 0,
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children[1].props.data]);
-
-  // table的scrollY值
-  let tableScrollY = 0;
-  if (typeof scrollY === 'string') {
-    tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)
-      ?.offsetHeight;
-  } else {
-    tableScrollY = scrollY;
-  }
 
   // table总高度
   const tableHeight = useMemo<string | number>(() => {
@@ -250,6 +244,15 @@ function VTable(props: any, otherParams): JSX.Element {
     }
     return temp;
   }, [state.rowHeight, totalLen]);
+
+  // table的scrollY值
+  let tableScrollY = 0;
+  if (typeof scrollY === 'string') {
+    tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)
+      ?.offsetHeight;
+  } else {
+    tableScrollY = scrollY;
+  }
 
   if (isNumber(tableHeight) && tableHeight < tableScrollY) {
     tableScrollY = tableHeight;
