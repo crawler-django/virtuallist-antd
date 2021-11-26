@@ -217,7 +217,7 @@ function VTable(props: any, otherParams): JSX.Element {
     if (state.totalLen) {
       setTotalLen(state.totalLen);
     }
-  }, [state.totalLen]);
+  }, [state]);
 
   useEffect(() => {
     return () => {
@@ -233,15 +233,6 @@ function VTable(props: any, otherParams): JSX.Element {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children[1].props.data]);
 
-  // table总高度
-  const tableHeight = useMemo<string | number>(() => {
-    let temp: string | number = 'auto';
-    if (state.rowHeight && totalLen) {
-      temp = state.rowHeight * totalLen;
-    }
-    return temp;
-  }, [state.rowHeight, totalLen]);
-
   // table的scrollY值
   let tableScrollY = 0;
   if (typeof scrollY === 'string') {
@@ -250,6 +241,15 @@ function VTable(props: any, otherParams): JSX.Element {
   } else {
     tableScrollY = scrollY;
   }
+
+  // table总高度
+  const tableHeight = useMemo<string | number>(() => {
+    let temp: string | number = 'auto';
+    if (state.rowHeight && totalLen) {
+      temp = state.rowHeight * totalLen;
+    }
+    return temp;
+  }, [state.rowHeight, totalLen]);
 
   if (isNumber(tableHeight) && tableHeight < tableScrollY) {
     tableScrollY = tableHeight;
@@ -269,7 +269,8 @@ function VTable(props: any, otherParams): JSX.Element {
       } else {
         const tempRenderLen = ((tableScrollY / state.rowHeight) | 0) + 1 + 2;
         // console.log('tempRenderLen', tempRenderLen)
-        temp = tempRenderLen > totalLen ? totalLen : tempRenderLen;
+        // temp = tempRenderLen > totalLen ? totalLen : tempRenderLen;
+        temp = tempRenderLen;
       }
     }
     return temp;
