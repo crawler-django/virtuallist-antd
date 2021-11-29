@@ -173,7 +173,7 @@ function VWrapper(props: any): JSX.Element {
   if (Array.isArray(contents) && contents.length) {
     tempNode = [
       children[0],
-      contents.slice(start, start + renderLen).map((item) => {
+      contents.slice(start, start + (renderLen ?? 1)).map((item) => {
         if (Array.isArray(item)) {
           // 兼容antd v4.3.5 --- rc-table 7.8.1及以下
           return item[0];
@@ -401,13 +401,6 @@ function VTable(props: any, otherParams): JSX.Element {
   );
 }
 
-/**
- * put tempObj in vtable.
- * @param tempObj
- * @returns
- */
-const transformTable = (tempObj) => (props) => VTable(props, tempObj);
-
 // ================导出===================
 export function VList(props: {
     height: number | string
@@ -417,24 +410,17 @@ export function VList(props: {
 }): any {
   const _vid = props.vid ?? DEFAULT_VID;
 
-  let TableComponent;
-
   if (!vidMap.has(_vid)) {
-    TableComponent = transformTable({
+    vidMap.set(_vid, {});
+  }
+
+  return {
+    table: (p) => VTable(p, {
       vid: _vid,
       scrollY: props.height,
       reachEnd: props.onReachEnd,
       onScroll: props.onScroll,
-    });
-    vidMap.set(_vid, {
-      components: TableComponent,
-    });
-  } else {
-    TableComponent = vidMap.get(_vid)?.components;
-  }
-
-  return {
-    table: TableComponent,
+    }),
     body: {
       wrapper: VWrapper,
       row: VRow,
