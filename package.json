@@ -1,6 +1,6 @@
 {
   "name": "virtuallist-antd",
-  "version": "0.6.4",
+  "version": "0.6.5-beta.0",
   "description": "virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

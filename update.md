@@ -1,6 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.4
+## 最新的代码(lastest) v0.6.5-beta.0
+1. fix: sometimes data is not complete in hot update when debugging
+
+## v0.6.4
 1. fix #48
 ## v0.6.3
 1. fix: 树形表格看不全数据的问题. (fix tree table bug of incomplete data)
