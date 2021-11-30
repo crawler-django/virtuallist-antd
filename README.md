@@ -54,7 +54,7 @@ npm install --save virtuallist-antd
 ## Usage
 
 ```tsx
-import * as React from 'react'
+import React, { useMemo } from 'react'
 import ReactDom from 'react-dom'
 
 import { VList } from 'virtuallist-antd'
@@ -64,6 +64,14 @@ function Example(): JSX.Element {
 	const dataSource = [...]
 	const columns = [...]
 	const rowkey = 'xxx'
+
+	const vComponents = useMemo(() => {
+		// 使用VList 即可有虚拟列表的效果
+		return VList({
+			height: 1000 // 此值和scrollY值相同. 必传. (required).  same value for scrolly
+		})
+	}, [])
+
 	return (
 		<Table 
 			dataSource={dataSource}
@@ -72,10 +80,7 @@ function Example(): JSX.Element {
 			scroll={{
 				y: 1000 // 滚动的高度, 可以是受控属性。 (number | string) be controlled.
 			}}
-			// 使用VList 即可有虚拟列表的效果
-			components={VList({
-				height: 1000 // 此值和scrollY值相同. 必传. (required).  same value for scrolly
-			})}
+			components={vComponents}
 		/>
 	)
 }
