@@ -303,7 +303,7 @@ function VTable(props: any, otherParams): JSX.Element {
   useEffect(() => {
     const scrollNode = wrap_tableRef.current?.parentNode as HTMLElement;
 
-    if (ifChangeRef?.current && totalLen) {
+    if (ifChangeRef?.current) {
       ifChangeRef.current = false;
 
       if (!reachEnd) {
