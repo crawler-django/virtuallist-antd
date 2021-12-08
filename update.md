@@ -1,6 +1,10 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.5-beta.0
+## 最新的代码(lastest) v0.6.5-beta.1
+1. fix: scrollTop is not reset when data change on same data length
+2. optimized relate code on data change
+
+## v0.6.5-beta.0
 1. fix: sometimes data is not complete in hot update when debugging
 
 ## v0.6.4
