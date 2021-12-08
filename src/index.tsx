@@ -199,7 +199,7 @@ function VTable(props: any, otherParams): JSX.Element {
   const { width, ...rest_style } = style;
 
   const {
-    vid, scrollY, reachEnd, onScroll,
+    vid, scrollY, reachEnd, onScroll, resetScrollTopWhenDataChange,
   } = otherParams ?? {};
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -306,7 +306,7 @@ function VTable(props: any, otherParams): JSX.Element {
     if (ifChangeRef?.current) {
       ifChangeRef.current = false;
 
-      if (!reachEnd) {
+      if (resetScrollTopWhenDataChange) {
         // 重置scrollTop
         if (scrollNode) {
           scrollNode.scrollTop = 0;
@@ -318,7 +318,7 @@ function VTable(props: any, otherParams): JSX.Element {
         dispatch({ type: 'reset', ifScrollTopClear: false });
       }
     }
-  }, [totalLen, reachEnd, vid, children]);
+  }, [totalLen, resetScrollTopWhenDataChange, vid, children]);
 
   useEffect(() => {
     const throttleScroll = throttle((e) => {
@@ -400,22 +400,32 @@ function VTable(props: any, otherParams): JSX.Element {
 // ================导出===================
 export function VList(props: {
   height: number | string
+  // 到底的回调函数
   onReachEnd?: () => void
   onScroll?: () => void
+  // 唯一标识
   vid?: string
+  // 重置scrollTop 当数据变更的时候.  默认为true
+  // reset scrollTop when data change
+  resetTopWhenDataChange?: boolean
 }): any {
-  const _vid = props.vid ?? DEFAULT_VID;
+  const {
+    vid = DEFAULT_VID, height, onReachEnd, onScroll, resetTopWhenDataChange = true,
+  } = props;
 
-  if (!vidMap.has(_vid)) {
-    vidMap.set(_vid, {});
+  const resetScrollTopWhenDataChange = onReachEnd ? false : resetTopWhenDataChange;
+
+  if (!vidMap.has(vid)) {
+    vidMap.set(vid, {});
   }
 
   return {
     table: (p) => VTable(p, {
-      vid: _vid,
-      scrollY: props.height,
-      reachEnd: props.onReachEnd,
-      onScroll: props.onScroll,
+      vid,
+      scrollY: height,
+      reachEnd: onReachEnd,
+      onScroll,
+      resetScrollTopWhenDataChange,
     }),
     body: {
       wrapper: VWrapper,
