@@ -1,6 +1,10 @@
 ## changelog
 
-## 最新的代码(lastest) v0.6.5-beta.2
+## 最新的代码(lastest) v0.7.0
+1. fix: #51
+2. new option 'resetTopWhenDataChange'
+
+## v0.6.5-beta.2
 1. fix: scrollTop is not reset when data change on same data length
 2. optimized relate code on data change
 
