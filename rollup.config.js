@@ -1,31 +1,31 @@
-import typescript from 'rollup-plugin-typescript2'
-import commonjs from 'rollup-plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
+import typescript from 'rollup-plugin-typescript2';
+import commonjs from 'rollup-plugin-commonjs';
+import external from 'rollup-plugin-peer-deps-external';
 // import postcss from 'rollup-plugin-postcss-modules'
-import postcss from 'rollup-plugin-postcss'
-import resolve from 'rollup-plugin-node-resolve'
-import uglify from 'rollup-plugin-uglify-es'
-import url from 'rollup-plugin-url'
-import svgr from '@svgr/rollup'
+import postcss from 'rollup-plugin-postcss';
+import resolve from 'rollup-plugin-node-resolve';
+import uglify from 'rollup-plugin-uglify-es';
+import url from 'rollup-plugin-url';
+import svgr from '@svgr/rollup';
 
-import simplevars from 'postcss-simple-vars'
-import nested from 'postcss-nested'
-import cssnext from 'postcss-cssnext'
-import cssnano from 'cssnano'
+import simplevars from 'postcss-simple-vars';
+import nested from 'postcss-nested';
+import cssnext from 'postcss-cssnext';
+import cssnano from 'cssnano';
 
-import pkg from './package.json'
+import pkg from './package.json';
 
 export default {
   input: 'src/index.tsx',
   output: [
     {
       file: pkg.main,
-      format: 'cjs'
+      format: 'cjs',
     },
     {
       file: pkg.module,
-      format: 'es'
-    }
+      format: 'es',
+    },
   ],
   plugins: [
     external(),
@@ -34,9 +34,9 @@ export default {
         simplevars(),
         nested(),
         cssnext({ warnForDuplicates: false }),
-        cssnano()
-      ],  
-      extendsions: ['.css']
+        cssnano(),
+      ],
+      extendsions: ['.css'],
     }),
     uglify(),
     url(),
@@ -44,7 +44,7 @@ export default {
     resolve(),
     typescript({
       rollupCommonJSResolveHack: true,
-      clean: true
+      clean: true,
     }),
     commonjs({
       include: 'node_modules/**',
@@ -59,9 +59,9 @@ export default {
           'useEffect',
           'useState',
           'useReducer',
-          'useMemo'
+          'useMemo',
         ],
-      }
-    })
-  ]
-}
+      },
+    }),
+  ],
+};

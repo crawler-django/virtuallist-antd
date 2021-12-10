@@ -17,6 +17,7 @@ const type = 'DragableBodyRow';
 
 const vlistComponent = VList({
   height: 500,
+  resetTopWhenDataChange: false,
 });
 
 const generateData = () => {

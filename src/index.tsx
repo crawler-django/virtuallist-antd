@@ -249,22 +249,30 @@ function VTable(props: any, otherParams): JSX.Element {
   }, [state.rowHeight, totalLen]);
 
   // table的scrollY值
-  let tableScrollY = 0;
-  if (typeof scrollY === 'string') {
-    tableScrollY = (wrap_tableRef.current?.parentNode as HTMLElement)
-      ?.offsetHeight;
-  } else {
-    tableScrollY = scrollY;
-  }
+  const [tableScrollY, setTableScrollY] = useState(0);
 
-  if (isNumber(tableHeight) && tableHeight < tableScrollY) {
-    tableScrollY = tableHeight;
-  }
+  // tableScrollY 随scrollY / tableHeight 进行变更
+  useEffect(() => {
+    let temp = 0;
 
-  // 处理tableScrollY <= 0的情况
-  if (tableScrollY <= 0) {
-    tableScrollY = 0;
-  }
+    if (typeof scrollY === 'string') {
+      temp = (wrap_tableRef.current?.parentNode as HTMLElement)
+        ?.offsetHeight ?? 0;
+    } else {
+      temp = scrollY;
+    }
+
+    if (isNumber(tableHeight) && tableHeight < temp) {
+      temp = tableHeight;
+    }
+
+    // 处理tableScrollY <= 0的情况
+    if (temp <= 0) {
+      temp = 0;
+    }
+
+    setTableScrollY(temp);
+  }, [scrollY, tableHeight]);
 
   // 渲染的条数
   const renderLen = useMemo<number>(() => {
