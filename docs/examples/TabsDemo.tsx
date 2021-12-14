@@ -24,9 +24,7 @@ function TabsDemo() {
       });
     }
 
-    setTimeout(() => {
-      setDataSource(tempDataSource);
-    }, 2000);
+    setDataSource(tempDataSource);
   }, []);
 
   const columns: any[] = [
