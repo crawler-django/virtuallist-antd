@@ -18,34 +18,25 @@ const initialState = {
   rowHeight: 0,
   // 当前的scrollTop
   curScrollTop: 0,
-  // 可滚动区域的高度
-  scrollHeight: 0,
-  // scrollY值
-  tableScrollY: 0,
   // 总行数
   totalLen: 0,
 };
 
 function reducer(state, action) {
   const {
-    scrollHeight,
     curScrollTop,
-    tableScrollY,
     rowHeight,
     totalLen,
     ifScrollTopClear,
   } = action;
 
   let stateScrollTop = state.curScrollTop;
-
   switch (action.type) {
     // 改变trs 即 改变渲染的列表trs
     case 'changeTrs':
       return {
         ...state,
         curScrollTop,
-        scrollHeight,
-        tableScrollY,
       };
       // 初始化每行的高度, 表格总高度, 渲染的条数
     case 'initHeight':
@@ -69,7 +60,6 @@ function reducer(state, action) {
       return {
         ...state,
         curScrollTop: ifScrollTopClear ? 0 : state.curScrollTop,
-        scrollHeight: 0,
       };
     default:
       throw new Error();
@@ -156,7 +146,7 @@ function VWrapper(props: any): JSX.Element {
   const { children, ...restProps } = props;
 
   const {
-    renderLen, start, dispatch, vid,
+    renderLen, start, dispatch, vid, totalLen,
   } = useContext(ScrollContext);
 
   const contents = useMemo(() => {
@@ -168,11 +158,13 @@ function VWrapper(props: any): JSX.Element {
   }, [contents]);
 
   useEffect(() => {
-    dispatch({
-      type: 'changeTotalLen',
-      totalLen: contentsLen ?? 0,
-    });
-  }, [contentsLen, dispatch, vid]);
+    if (totalLen !== contentsLen) {
+      dispatch({
+        type: 'changeTotalLen',
+        totalLen: contentsLen ?? 0,
+      });
+    }
+  }, [contentsLen, dispatch, vid, totalLen]);
 
   let tempNode = null;
   if (Array.isArray(contents) && contents.length) {
@@ -215,9 +207,7 @@ function VTable(props: any, otherParams): JSX.Element {
   );
 
   useEffect(() => {
-    if (state.totalLen) {
-      setTotalLen(state.totalLen);
-    }
+    setTotalLen(state.totalLen);
   }, [state.totalLen]);
 
   useEffect(() => {
@@ -242,6 +232,7 @@ function VTable(props: any, otherParams): JSX.Element {
   // table总高度
   const tableHeight = useMemo<string | number>(() => {
     let temp: string | number = 'auto';
+
     if (state.rowHeight && totalLen) {
       temp = state.rowHeight * totalLen;
     }
@@ -262,9 +253,9 @@ function VTable(props: any, otherParams): JSX.Element {
       temp = scrollY;
     }
 
-    if (isNumber(tableHeight) && tableHeight < temp) {
-      temp = tableHeight;
-    }
+    // if (isNumber(tableHeight) && tableHeight < temp) {
+    //   temp = tableHeight;
+    // }
 
     // 处理tableScrollY <= 0的情况
     if (temp <= 0) {
@@ -292,6 +283,7 @@ function VTable(props: any, otherParams): JSX.Element {
 
   // 渲染中的第一条
   let start = state.rowHeight ? (state.curScrollTop / state.rowHeight) | 0 : 0;
+
   // 偏移量
   let offsetStart = state.rowHeight ? state.curScrollTop % state.rowHeight : 0;
 
@@ -326,6 +318,12 @@ function VTable(props: any, otherParams): JSX.Element {
         dispatch({ type: 'reset', ifScrollTopClear: false });
       }
     }
+
+    if (vidMap.has(vid)) {
+      vidMap.set(vid, {
+        scrollNode,
+      });
+    }
   }, [totalLen, resetScrollTopWhenDataChange, vid, children]);
 
   useEffect(() => {
@@ -349,8 +347,6 @@ function VTable(props: any, otherParams): JSX.Element {
       dispatch({
         type: 'changeTrs',
         curScrollTop: scrollTop,
-        scrollHeight,
-        tableScrollY,
       });
     }, 60);
 
@@ -363,7 +359,7 @@ function VTable(props: any, otherParams): JSX.Element {
     return () => {
       ref.removeEventListener('scroll', throttleScroll);
     };
-  }, [wrap_tableRef, tableScrollY, onScroll, reachEnd]);
+  }, [onScroll, reachEnd]);
 
   return (
     <div

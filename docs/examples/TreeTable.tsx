@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Table } from 'antd';
 import { VList } from '../../src/index';
 
@@ -7,7 +7,7 @@ import 'antd/dist/antd.css';
 const generateData = () => {
   const temp = [];
 
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 1; i += 1) {
     temp.push({
       a: i,
       b: 'bbbb'.repeat(Math.floor(Math.random() * 10)),
@@ -121,6 +121,8 @@ function TreeTable() {
         setData(initData);
       }
 
+      // setData((d) => [...d]);
+
       return !pre;
     });
   }, []);
@@ -150,6 +152,8 @@ function TreeTable() {
     },
   ];
 
+  const vComponent = useMemo(() => VList({ height: 500, resetTopWhenDataChange: false }), []);
+
   return (
     <div>
       <h2>sub table</h2>
@@ -160,7 +164,7 @@ function TreeTable() {
         rowKey={(record) => record.a}
         pagination={false}
         scroll={{ y: 500, x: '100%' }}
-        components={VList({ height: 500 })}
+        components={vComponent}
       />
     </div>
   );
