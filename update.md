@@ -1,6 +1,10 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.0
+## 最新的代码(lastest) v0.7.1
+1. fix: scrollTo fault.
+2. Fix the error caused by less data when the tree table is changed
+
+## v0.7.0
 1. fix: #51
 2. new option 'resetTopWhenDataChange'
 
