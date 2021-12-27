@@ -101,7 +101,6 @@ function VRow(props: any, ref: any): JSX.Element {
             if (tempRef?.current?.offsetHeight && !rowHeight && totalLen) {
                 const tempRowHeight = tempRef?.current?.offsetHeight ?? 0
 
-                console.log('tempRowHeight', tempRowHeight)
                 vidMap.set(vid, {
                     ...vidMap.get(vid),
                     rowItemHeight: tempRowHeight,
@@ -470,4 +469,6 @@ export function scrollTo(option: {
     } else {
         scrollNode.scrollTop = y ?? 0
     }
+
+    return { vid, rowItemHeight }
 }

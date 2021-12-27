@@ -43,5 +43,7 @@ module.exports = {
         'react/jsx-indent-props': 'off',
         'implicit-arrow-linebreak': 'off',
         'comma-dangle': 'off',
+        'object-curly-newline': 'off',
+        'operator-linebreak': 'off',
     },
 }
