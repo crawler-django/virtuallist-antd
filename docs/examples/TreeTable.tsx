@@ -118,7 +118,7 @@ function TreeTable() {
       if (!pre) {
         setData([]);
       } else {
-        setData(initData);
+        setData(generateData());
       }
 
       // setData((d) => [...d]);
