@@ -1,6 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.2
+## 最新的代码(lastest) v0.7.3
+1. support react18.
+
+## v0.7.2
 1. fix: scrollTo row unusual
 
 ## v0.7.1
