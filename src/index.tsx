@@ -189,7 +189,7 @@ function VTable(props: any, otherParams): JSX.Element {
         scrollY,
         reachEnd,
         onScroll,
-        onVTable,
+        onListRender,
         resetScrollTopWhenDataChange,
     } = otherParams ?? {}
 
@@ -363,7 +363,7 @@ function VTable(props: any, otherParams): JSX.Element {
         }
     }, [onScroll, reachEnd])
 
-    onVTable && onVTable({ start, renderLen })
+    onListRender && onListRender({ start, renderLen })
 
     return (
         <div
@@ -411,7 +411,8 @@ export function VList(props: {
     // 到底的回调函数
     onReachEnd?: () => void
     onScroll?: () => void
-    onVTable?: (op: { start: number; renderLen: number }) => void
+    // 列表渲染时触发的回调函数(参数可以拿到 start: 渲染开始行, renderLen: 渲染行数)
+    onListRender?: (listInfo: { start: number; renderLen: number }) => void
     // 唯一标识
     vid?: string
     // 重置scrollTop 当数据变更的时候.  默认为true
@@ -423,7 +424,7 @@ export function VList(props: {
         height,
         onReachEnd,
         onScroll,
-        onVTable,
+        onListRender,
         resetTopWhenDataChange = true,
     } = props
 
@@ -442,7 +443,7 @@ export function VList(props: {
                 scrollY: height,
                 reachEnd: onReachEnd,
                 onScroll,
-                onVTable,
+                onListRender,
                 resetScrollTopWhenDataChange,
             }),
         body: {
