@@ -106,6 +106,7 @@ class SortableTable extends React.Component {
                 dataSource={dataSource}
                 columns={columns}
                 rowKey="index"
+                scroll={{ y: 500 }}
                 components={{
                     ...vlistComponents,
                     body: {

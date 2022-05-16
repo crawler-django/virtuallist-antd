@@ -8,7 +8,7 @@ import React, {
     useState,
     useMemo,
 } from 'react'
-import { throttle, isNumber } from 'lodash-es'
+import { throttle, isNumber, debounce } from 'lodash-es'
 
 import './style.css'
 
@@ -64,6 +64,7 @@ function reducer(state, action) {
 // ==============全局常量 ================== //
 const DEFAULT_VID = 'vtable'
 const vidMap = new Map()
+let debounceListRender: any
 
 // ===============context ============== //
 const ScrollContext = createContext({
@@ -184,14 +185,8 @@ function VTable(props: any, otherParams): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    const {
-        vid,
-        scrollY,
-        reachEnd,
-        onScroll,
-        onListRender,
-        resetScrollTopWhenDataChange,
-    } = otherParams ?? {}
+    const { vid, scrollY, reachEnd, onScroll, resetScrollTopWhenDataChange } =
+        otherParams ?? {}
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -209,8 +204,10 @@ function VTable(props: any, otherParams): JSX.Element {
         setTotalLen(state.totalLen)
     }, [state.totalLen])
 
+    // 组件卸载的清除操作
     useEffect(() => {
         return () => {
+            console.log('销毁vid')
             vidMap.delete(vid)
         }
     }, [vid])
@@ -218,7 +215,7 @@ function VTable(props: any, otherParams): JSX.Element {
     // 数据变更
     useEffect(() => {
         ifChangeRef.current = true
-
+        // console.log('数据变更')
         if (isNumber(children[1]?.props?.data?.length)) {
             dispatch({
                 type: 'changeTotalLen',
@@ -363,7 +360,8 @@ function VTable(props: any, otherParams): JSX.Element {
         }
     }, [onScroll, reachEnd])
 
-    onListRender && onListRender({ start, renderLen })
+    // console.log(start, renderLen)
+    debounceListRender(start, renderLen)
 
     return (
         <div
@@ -380,7 +378,7 @@ function VTable(props: any, otherParams): JSX.Element {
             <ScrollContext.Provider
                 value={{
                     dispatch,
-                    rowHeight: state.rowHeight,
+                    rowHeight: vidMap?.get(vid)?.rowItemHeight,
                     start,
                     offsetStart,
                     renderLen,
@@ -412,7 +410,13 @@ export function VList(props: {
     onReachEnd?: () => void
     onScroll?: () => void
     // 列表渲染时触发的回调函数(参数可以拿到 start: 渲染开始行, renderLen: 渲染行数)
+    // listRender: provide info: {start, renderLen} on render list.
+    // start: start index in render list.
+    // renderLen: render length in render list.
     onListRender?: (listInfo: { start: number; renderLen: number }) => void
+    // 列表渲染时触发的回调函数防抖毫秒数.
+    // listRender debounceMs.
+    debounceListRenderMS?: number
     // 唯一标识
     vid?: string
     // 重置scrollTop 当数据变更的时候.  默认为true
@@ -425,6 +429,7 @@ export function VList(props: {
         onReachEnd,
         onScroll,
         onListRender,
+        debounceListRenderMS,
         resetTopWhenDataChange = true,
     } = props
 
@@ -433,8 +438,14 @@ export function VList(props: {
         : resetTopWhenDataChange
 
     if (!vidMap.has(vid)) {
-        vidMap.set(vid, {})
+        vidMap.set(vid, { _id: vid })
     }
+
+    debounceListRender = onListRender
+        ? debounce((_start, _renderLen) => {
+              onListRender({ start: _start, renderLen: _renderLen })
+          }, debounceListRenderMS ?? 300)
+        : () => {}
 
     return {
         table: (p) =>

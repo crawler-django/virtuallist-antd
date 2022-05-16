@@ -18,41 +18,61 @@ const generateData = () => {
     return temp
 }
 
-const initData = generateData()
+// const initData = generateData()
 
 function AsyncTable() {
-    const [data, setData] = useState(initData)
+    const [data, setData] = useState(generateData())
 
     const handleClick = (record, e) => {
         e.preventDefault()
     }
 
+    const lastListRenderInfo = useRef({ start: -1, renderLen: -1 })
+
     // 防抖函数
-    const useDebounce = (fn, delay) => {
-        const { current } = useRef({ fn, timer: null })
-        useEffect(() => {
-            current.fn = fn
-        }, [fn])
+    // const useDebounce = (fn, delay) => {
+    //     const { current } = useRef({ fn, timer: null })
+    //     useEffect(() => {
+    //         current.fn = fn
+    //     }, [fn])
 
-        return useCallback(function f(...args) {
-            if (current.timer) {
-                clearTimeout(current.timer)
-            }
-            current.timer = setTimeout(() => {
-                current.fn.call(this, ...args)
-            }, delay)
-        }, [])
-    }
+    //     return useCallback(function f(...args) {
+    //         if (current.timer) {
+    //             clearTimeout(current.timer)
+    //         }
+    //         current.timer = setTimeout(() => {
+    //             current.fn.call(this, ...args)
+    //         }, delay)
+    //     }, [])
+    // }
 
-    const onListRender = useDebounce((listInfo) => {
+    const onListRender = useCallback((listInfo) => {
         const { start, renderLen } = listInfo
-        const currentData = data.slice(start, start + renderLen)
-        currentData.forEach((item, index) => {
-            item.c = 'asyncData' + (start + index + 1)
-        })
-        const newData = JSON.parse(JSON.stringify(data))
-        setData(newData)
-    }, 1000)
+
+        const lastInfo = lastListRenderInfo?.current
+
+        if (start !== lastInfo?.start || renderLen !== lastInfo?.renderLen) {
+            lastListRenderInfo.current = { start, renderLen }
+            setData((pre) => {
+                const currentData = pre.slice(start, start + renderLen)
+
+                currentData.forEach((item, index) => {
+                    item.c = `asyncData${start + index + 1}`
+                })
+
+                const newData = JSON.parse(JSON.stringify(pre))
+
+                return newData
+            })
+        }
+
+        // const currentData = data.slice(start, start + renderLen)
+        // currentData.forEach((item, index) => {
+        //     item.c = `asyncData${start + index + 1}`
+        // })
+        // const newData = JSON.parse(JSON.stringify(data))
+        // setData(newData)
+    }, [])
 
     const columns = [
         {
@@ -72,8 +92,7 @@ function AsyncTable() {
             dataIndex: 'c',
             key: 'c',
             width: 200,
-            render: (t) =>
-                t ? t : <Skeleton active paragraph={{ rows: 0 }} />,
+            render: (t) => t || <Skeleton active paragraph={{ rows: 0 }} />,
         },
         {
             title: 'Operations',
@@ -92,10 +111,11 @@ function AsyncTable() {
         () =>
             VList({
                 height: 500,
+                // vid: 'asyncTable',
                 resetTopWhenDataChange: false,
-                onListRender: onListRender,
+                onListRender,
             }),
-        []
+        [onListRender]
     )
 
     return (
