@@ -52,6 +52,7 @@ virtualList for antd-table, 实现 antd-table 的虚拟列表, antd-table 无限
 -   [拖拽行(drag row)](https://codesandbox.io/s/drag-row-1fjg4?file=/index.js)
 -   [拖拽手柄列(drag row in handle-icon)](https://codesandbox.io/s/tuozhuaishoubinglie-antd4156-forked-1d6z1?file=/index.js)
 -   [编辑列(edit cell)](https://codesandbox.io/s/editable-example-3656ln?file=/src/App.js)
+-   [异步列表/onRenderList 例子(async Table, onRenderList demo)](https://codesandbox.io/s/shu-xing-biao-ge-forked-4lt6u?file=/src/index.tsx)
 
 ## Install
 
