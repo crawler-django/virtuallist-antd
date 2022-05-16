@@ -1,6 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.3
+## 最新的代码(lastest) v0.7.4-beta.0
+1. feat: onListRender & debounceListRenderMS & demo.
+
+## v0.7.3
 1. support react18.
 
 ## v0.7.2
