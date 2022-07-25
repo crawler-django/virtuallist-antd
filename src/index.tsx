@@ -207,7 +207,6 @@ function VTable(props: any, otherParams): JSX.Element {
     // 组件卸载的清除操作
     useEffect(() => {
         return () => {
-            console.log('销毁vid')
             vidMap.delete(vid)
         }
     }, [vid])
