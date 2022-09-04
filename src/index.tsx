@@ -275,6 +275,7 @@ function VTable(props: any, otherParams): JSX.Element {
                 temp = tempRenderLen
             }
         }
+
         return temp
     }, [state.rowHeight, totalLen, tableScrollY])
 
@@ -342,10 +343,13 @@ function VTable(props: any, otherParams): JSX.Element {
             // eslint-disable-next-line no-unused-expressions
             onScroll && onScroll()
 
-            dispatch({
-                type: 'changeTrs',
-                curScrollTop: scrollTop,
-            })
+            // 若totalLen小于renderLen, 说明一次就全部渲染完了, 不需要再dispatch
+            if (renderLen <= totalLen) {
+                dispatch({
+                    type: 'changeTrs',
+                    curScrollTop: scrollTop,
+                })
+            }
         }, 60)
 
         const ref = wrap_tableRef?.current?.parentNode as HTMLElement
@@ -357,7 +361,7 @@ function VTable(props: any, otherParams): JSX.Element {
         return () => {
             ref.removeEventListener('scroll', throttleScroll)
         }
-    }, [onScroll, reachEnd])
+    }, [onScroll, reachEnd, renderLen, totalLen])
 
     // console.log(start, renderLen)
     debounceListRender(start, renderLen)
