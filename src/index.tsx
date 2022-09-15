@@ -236,7 +236,7 @@ function VTable(props: any, otherParams): JSX.Element {
 
     const realHeight = useMemo<string | number>(() => {
         if (heightAsTableHeight && typeof tableHeight === 'number' && typeof scrollY === 'number') {
-            return Math.max(scrollY, tableHeight);
+            return Math.max(scrollY - 10, tableHeight);
         }
         return tableHeight;
     }, [heightAsTableHeight, scrollY, tableHeight]);
