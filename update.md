@@ -1,7 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.5-beta.1
-1. fix: #87
+## 最新的代码(lastest) v0.7.5-beta.2
+1. fix: #87. (表格收起时, 高度变化导致的空白问题)
+2. fix: #90. (same as 1)
+3. fix: #91. (firefox兼容问题, 底部有空白且一直回弹)
 
 ## v0.7.4
 1. feat: onListRender & debounceListRenderMS & demo.
