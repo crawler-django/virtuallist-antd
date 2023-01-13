@@ -343,6 +343,7 @@ function VTable(props: any, otherParams): JSX.Element {
             // eslint-disable-next-line no-unused-expressions
             onScroll && onScroll()
 
+            // 若renderLen大于totalLen, 置空curScrollTop. => table paddingTop会置空.
             dispatch({
                 type: 'changeTrs',
                 curScrollTop: renderLen <= totalLen ? scrollTop : 0,
