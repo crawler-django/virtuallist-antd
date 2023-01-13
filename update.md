@@ -1,6 +1,6 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.5-beta.0
+## 最新的代码(lastest) v0.7.5-beta.1
 1. fix: #87
 
 ## v0.7.4
