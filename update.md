@@ -1,6 +1,9 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.4
+## 最新的代码(lastest) v0.7.5-beta.0
+1. fix: #87
+
+## v0.7.4
 1. feat: onListRender & debounceListRenderMS & demo.
 2. remove console.log
 3. fix #73
