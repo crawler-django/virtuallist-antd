@@ -345,7 +345,7 @@ function VTable(props: any, otherParams): JSX.Element {
 
             dispatch({
                 type: 'changeTrs',
-                curScrollTop: scrollTop,
+                curScrollTop: renderLen <= totalLen ? scrollTop : 0,
             })
         }, 60)
 
