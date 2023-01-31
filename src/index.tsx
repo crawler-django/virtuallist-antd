@@ -374,7 +374,6 @@ function VTable(props: any, otherParams): JSX.Element {
                 height: tableHeight,
                 boxSizing: 'border-box',
                 paddingTop: state.curScrollTop,
-                overflow: 'hidden',
             }}
         >
             <ScrollContext.Provider
