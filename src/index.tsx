@@ -482,17 +482,23 @@ export function scrollTo(option: {
 }) {
     const { row, y, vid = DEFAULT_VID } = option
 
-    const { scrollNode, rowItemHeight } = vidMap.get(vid)
+    try {
+        const { scrollNode, rowItemHeight } = vidMap.get(vid)
 
-    if (row) {
-        if (row - 1 > 0) {
-            scrollNode.scrollTop = (row - 1) * (rowItemHeight ?? 0)
+        if (row) {
+            if (row - 1 > 0) {
+                scrollNode.scrollTop = (row - 1) * (rowItemHeight ?? 0)
+            } else {
+                scrollNode.scrollTop = 0
+            }
         } else {
-            scrollNode.scrollTop = 0
+            scrollNode.scrollTop = y ?? 0
         }
-    } else {
-        scrollNode.scrollTop = y ?? 0
-    }
 
-    return { vid, rowItemHeight }
+        return { vid, rowItemHeight }
+    } catch (e) {
+        console.error('dont call scrollTo before init table')
+
+        return { vid, rowItemHeight: -1 }
+    }
 }
