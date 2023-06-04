@@ -8,7 +8,7 @@ import React, {
     useState,
     useMemo,
 } from 'react'
-import { throttle, isNumber, debounce } from 'lodash-es'
+import { throttle, debounce } from 'lodash-es'
 
 import './style.css'
 
@@ -28,7 +28,7 @@ const initialState = {
 }
 
 function reducer(state, action) {
-    const { curScrollTop, rowHeight, totalLen, ifScrollTopClear, vid } = action
+    const { curScrollTop, rowHeight, totalLen, ifScrollTopClear } = action
 
     let stateScrollTop = state.curScrollTop
     switch (action.type) {
@@ -193,8 +193,6 @@ function VTable(props: any, otherParams): JSX.Element {
     const wrap_tableRef = useRef<HTMLDivElement>(null)
     const tableRef = useRef<HTMLTableElement>(null)
 
-    const ifChangeRef = useRef(false)
-
     // 数据的总条数
     const [totalLen, setTotalLen] = useState<number>(
         children[1]?.props?.data?.length ?? 0
@@ -210,19 +208,6 @@ function VTable(props: any, otherParams): JSX.Element {
             vidMap.delete(vid)
         }
     }, [vid])
-
-    // 数据变更
-    useEffect(() => {
-        ifChangeRef.current = true
-        // console.log('数据变更')
-        if (isNumber(children[1]?.props?.data?.length)) {
-            dispatch({
-                type: 'changeTotalLen',
-                totalLen: children[1]?.props?.data?.length ?? 0,
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [children[1].props.data])
 
     // table总高度
     const tableHeight = useMemo<string | number>(() => {
@@ -301,20 +286,16 @@ function VTable(props: any, otherParams): JSX.Element {
     useEffect(() => {
         const scrollNode = wrap_tableRef.current?.parentNode as HTMLElement
 
-        if (ifChangeRef?.current) {
-            ifChangeRef.current = false
-
-            if (resetScrollTopWhenDataChange) {
-                // 重置scrollTop
-                if (scrollNode) {
-                    scrollNode.scrollTop = 0
-                }
-
-                dispatch({ type: 'reset', ifScrollTopClear: true })
-            } else {
-                // 不重置scrollTop 不清空curScrollTop
-                dispatch({ type: 'reset', ifScrollTopClear: false })
+        if (resetScrollTopWhenDataChange) {
+            // 重置scrollTop
+            if (scrollNode) {
+                scrollNode.scrollTop = 0
             }
+
+            dispatch({ type: 'reset', ifScrollTopClear: true })
+        } else {
+            // 不重置scrollTop 不清空curScrollTop
+            dispatch({ type: 'reset', ifScrollTopClear: false })
         }
 
         if (vidMap.has(vid)) {
@@ -372,7 +353,6 @@ function VTable(props: any, otherParams): JSX.Element {
         }
     }, [onScroll, reachEnd, renderLen, totalLen, vid])
 
-    // console.log(start, renderLen)
     debounceListRender(start, renderLen)
 
     return (

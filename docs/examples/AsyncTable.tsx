@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
-import { Skeleton, Table } from 'antd'
+import { Skeleton, Table, Button } from 'antd'
 import { VList } from '../../src/index'
 
 import 'antd/dist/antd.css'
@@ -9,7 +9,7 @@ const generateData = () => {
 
     for (let i = 0; i < 300; i += 1) {
         temp.push({
-            a: i + 1,
+            a: i,
             b: '233',
             c: null,
         })
@@ -22,6 +22,8 @@ const generateData = () => {
 
 function AsyncTable() {
     const [data, setData] = useState(generateData())
+
+    const refreshFlag = useRef(false)
 
     const handleClick = (record, e) => {
         e.preventDefault()
@@ -51,7 +53,11 @@ function AsyncTable() {
 
         const lastInfo = lastListRenderInfo?.current
 
-        if (start !== lastInfo?.start || renderLen !== lastInfo?.renderLen) {
+        if (
+            start !== lastInfo?.start ||
+            renderLen !== lastInfo?.renderLen ||
+            refreshFlag.current === true
+        ) {
             lastListRenderInfo.current = { start, renderLen }
             setData((pre) => {
                 const currentData = pre.slice(start, start + renderLen)
@@ -64,6 +70,8 @@ function AsyncTable() {
 
                 return newData
             })
+
+            refreshFlag.current = false
         }
 
         // const currentData = data.slice(start, start + renderLen)
@@ -107,6 +115,11 @@ function AsyncTable() {
         },
     ]
 
+    const handleSearchBtnClick = useCallback(() => {
+        setData(generateData())
+        refreshFlag.current = true
+    }, [])
+
     const vComponent = useMemo(
         () =>
             VList({
@@ -120,6 +133,7 @@ function AsyncTable() {
 
     return (
         <div>
+            <Button onClick={handleSearchBtnClick}>点我搜索</Button>
             <h2>async table</h2>
             <Table
                 columns={columns}
