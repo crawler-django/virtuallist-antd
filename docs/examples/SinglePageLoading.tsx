@@ -53,12 +53,32 @@ function SinglePageLoading() {
             dataIndex: 'company_name2',
             width: 200,
         },
+        {
+            title: '公司3',
+            dataIndex: 'company_name3',
+            width: 200,
+        },
+        {
+            title: '公司4',
+            dataIndex: 'company_name4',
+            width: 200,
+        },
+        {
+            title: '公司5',
+            dataIndex: 'company_name5',
+            width: 200,
+        },
+        {
+            title: '公司6',
+            dataIndex: 'company_name6',
+            width: 200,
+        },
     ]
 
     const handleReachEnd1 = useCallback(() => {
         setLoading1(true)
         setDataSource1((pre) => {
-            const temp = generateData()
+            const temp = []
             return [...pre, ...temp]
         })
         setTimeout(() => {

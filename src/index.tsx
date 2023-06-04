@@ -12,6 +12,11 @@ import { throttle, isNumber, debounce } from 'lodash-es'
 
 import './style.css'
 
+// ==============全局常量 ================== //
+const DEFAULT_VID = 'vtable'
+const vidMap = new Map()
+let debounceListRender: any
+
 // ===============reducer ============== //
 const initialState = {
     // 行高度
@@ -23,7 +28,7 @@ const initialState = {
 }
 
 function reducer(state, action) {
-    const { curScrollTop, rowHeight, totalLen, ifScrollTopClear } = action
+    const { curScrollTop, rowHeight, totalLen, ifScrollTopClear, vid } = action
 
     let stateScrollTop = state.curScrollTop
     switch (action.type) {
@@ -60,11 +65,6 @@ function reducer(state, action) {
             throw new Error()
     }
 }
-
-// ==============全局常量 ================== //
-const DEFAULT_VID = 'vtable'
-const vidMap = new Map()
-let debounceListRender: any
 
 // ===============context ============== //
 const ScrollContext = createContext({
@@ -327,6 +327,8 @@ function VTable(props: any, otherParams): JSX.Element {
 
     useEffect(() => {
         const throttleScroll = throttle((e) => {
+            const historyScrollHeight = vidMap.get(vid)?.scrollHeight
+
             const scrollTop: number = e?.target?.scrollTop ?? 0
             const scrollHeight: number = e?.target?.scrollHeight ?? 0
             const clientHeight: number = e?.target?.clientHeight ?? 0
@@ -334,7 +336,15 @@ function VTable(props: any, otherParams): JSX.Element {
             // 到底了 没有滚动条就不会触发reachEnd. 建议设置scrolly高度少点或者数据量多点.
             if (scrollTop === scrollHeight) {
                 // reachEnd && reachEnd()
-            } else if (scrollTop + clientHeight >= scrollHeight) {
+            } else if (
+                scrollTop + clientHeight >= scrollHeight &&
+                historyScrollHeight !== scrollHeight
+            ) {
+                // 相同的tableData情况下, 上次reachEnd执行后, scrollHeight不变, 则不会再次请求reachEnd
+                vidMap.set(vid, {
+                    ...vidMap.get(vid),
+                    scrollHeight,
+                })
                 // 有滚动条的情况
                 // eslint-disable-next-line no-unused-expressions
                 reachEnd && reachEnd()
@@ -347,6 +357,7 @@ function VTable(props: any, otherParams): JSX.Element {
             dispatch({
                 type: 'changeTrs',
                 curScrollTop: renderLen <= totalLen ? scrollTop : 0,
+                vid,
             })
         }, 60)
 
@@ -359,7 +370,7 @@ function VTable(props: any, otherParams): JSX.Element {
         return () => {
             ref.removeEventListener('scroll', throttleScroll)
         }
-    }, [onScroll, reachEnd, renderLen, totalLen])
+    }, [onScroll, reachEnd, renderLen, totalLen, vid])
 
     // console.log(start, renderLen)
     debounceListRender(start, renderLen)
