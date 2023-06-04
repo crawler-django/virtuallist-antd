@@ -1,6 +1,10 @@
 ## changelog
 
-## 最新的代码(lastest) v0.7.6
+## 最新的代码(lastest) v0.8.0-beta.1
+1. patch #103、#97
+2. fix: #102: scrollX cause call onReachEnd
+
+## v0.7.6
 1. fix: scrollX problem
 2. open #91
 ## v0.7.5
