@@ -185,7 +185,7 @@ function VTable(props: any, otherParams): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    const { vid, scrollY, reachEnd, onScroll, resetScrollTopWhenDataChange } =
+    const { vid, scrollY, heightAsTableHeight, reachEnd, onScroll, resetScrollTopWhenDataChange } =
         otherParams ?? {}
 
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -218,6 +218,13 @@ function VTable(props: any, otherParams): JSX.Element {
         }
         return temp
     }, [state.rowHeight, totalLen])
+
+    const realHeight = useMemo<string | number>(() => {
+        if (heightAsTableHeight && typeof tableHeight === 'number' && typeof scrollY === 'number') {
+            return Math.max(scrollY - 10, tableHeight);
+        }
+        return tableHeight;
+    }, [heightAsTableHeight, scrollY, tableHeight]);
 
     // table的scrollY值
     const [tableScrollY, setTableScrollY] = useState(0)
@@ -362,7 +369,7 @@ function VTable(props: any, otherParams): JSX.Element {
             style={{
                 width: '100%',
                 position: 'relative',
-                height: tableHeight,
+                height: realHeight,
                 boxSizing: 'border-box',
                 paddingTop: state.curScrollTop,
             }}
@@ -398,6 +405,8 @@ function VTable(props: any, otherParams): JSX.Element {
 // ================导出===================
 export function VList(props: {
     height: number | string
+    // 是否需要将tableHeight和height的最大值作为table的body高度使用(仅height为数字时才生效)
+    heightAsTableHeight?: boolean;
     // 到底的回调函数
     onReachEnd?: () => void
     onScroll?: () => void
@@ -418,6 +427,7 @@ export function VList(props: {
     const {
         vid = DEFAULT_VID,
         height,
+        heightAsTableHeight = false,
         onReachEnd,
         onScroll,
         onListRender,
@@ -444,6 +454,7 @@ export function VList(props: {
             VTable(p, {
                 vid,
                 scrollY: height,
+                heightAsTableHeight,
                 reachEnd: onReachEnd,
                 onScroll,
                 onListRender,
