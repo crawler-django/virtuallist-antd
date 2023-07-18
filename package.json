@@ -30,7 +30,7 @@
     },
     "homepage": "https://github.com/crawler-django/virtuallist-antd",
     "peerDependencies": {
-        "antd": "^4.1.0",
+        "antd": "^4.1.0 || ^5.0.0",
         "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
     },
     "devDependencies": {
