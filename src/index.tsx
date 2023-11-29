@@ -185,7 +185,7 @@ function VTable(props: any, otherParams): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    const { vid, scrollY, reachEnd, onScroll, resetScrollTopWhenDataChange } =
+    const { vid, scrollY, offset, reachEnd, onScroll, resetScrollTopWhenDataChange } =
         otherParams ?? {}
 
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -318,7 +318,7 @@ function VTable(props: any, otherParams): JSX.Element {
             if (scrollTop === scrollHeight) {
                 // reachEnd && reachEnd()
             } else if (
-                scrollTop + clientHeight >= scrollHeight &&
+                scrollTop + clientHeight + offset >= scrollHeight &&
                 historyScrollHeight !== scrollHeight
             ) {
                 // 相同的tableData情况下, 上次reachEnd执行后, scrollHeight不变, 则不会再次请求reachEnd
@@ -414,6 +414,8 @@ export function VList(props: {
     // 重置scrollTop 当数据变更的时候.  默认为true
     // reset scrollTop when data change
     resetTopWhenDataChange?: boolean
+    // 偏移量，可提前到到底部，请求接口
+    offset?: number
 }): any {
     const {
         vid = DEFAULT_VID,
@@ -423,6 +425,7 @@ export function VList(props: {
         onListRender,
         debounceListRenderMS,
         resetTopWhenDataChange = true,
+        offset
     } = props
 
     const resetScrollTopWhenDataChange = onReachEnd
@@ -448,6 +451,7 @@ export function VList(props: {
                 onScroll,
                 onListRender,
                 resetScrollTopWhenDataChange,
+                offset
             }),
         body: {
             wrapper: VWrapper,
