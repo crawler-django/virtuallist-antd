@@ -185,7 +185,7 @@ function VTable(props: any, otherParams): JSX.Element {
     const { style, children, ...rest } = props
     const { width, ...rest_style } = style
 
-    const { vid, scrollY, offset, reachEnd, onScroll, resetScrollTopWhenDataChange } =
+    const { vid, scrollY, offset = 0, reachEnd, onScroll, resetScrollTopWhenDataChange } =
         otherParams ?? {}
 
     const [state, dispatch] = useReducer(reducer, initialState)
