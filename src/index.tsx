@@ -313,12 +313,13 @@ function VTable(props: any, otherParams): JSX.Element {
             const scrollTop: number = e?.target?.scrollTop ?? 0
             const scrollHeight: number = e?.target?.scrollHeight ?? 0
             const clientHeight: number = e?.target?.clientHeight ?? 0
-
+            const ratio: number = window.devicePixelRatio
+            const precisionScrollTop = ratio === 1 ? scrollTop : Math.ceil(scrollTop)
             // 到底了 没有滚动条就不会触发reachEnd. 建议设置scrolly高度少点或者数据量多点.
-            if (scrollTop === scrollHeight) {
+            if (precisionScrollTop === scrollHeight) {
                 // reachEnd && reachEnd()
             } else if (
-                scrollTop + clientHeight >= scrollHeight &&
+                precisionScrollTop + clientHeight >= scrollHeight &&
                 historyScrollHeight !== scrollHeight
             ) {
                 // 相同的tableData情况下, 上次reachEnd执行后, scrollHeight不变, 则不会再次请求reachEnd

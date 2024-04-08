@@ -13,7 +13,9 @@ import nested from 'postcss-nested';
 import cssnext from 'postcss-cssnext';
 import cssnano from 'cssnano';
 
-import pkg from './package.json';
+import pkg from "./package.json" assert { type: "json" }
+
+console.log(svgr)
 
 export default {
   input: 'src/index.tsx',

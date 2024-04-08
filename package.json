@@ -2,9 +2,10 @@
     "name": "virtuallist-antd",
     "version": "0.8.0-beta.1",
     "description": "virtualList for antd-table, 实现antd-table的虚拟列表, antd-table无限滚动, infinite scrolling for antd-table",
-    "main": "dist/index.js",
-    "module": "dist/index.es.js",
+    "main": "dist/dist/index.js",
+    "module": "dist/dist/index.es.js",
     "jsnext:main": "dist/index.es.js",
+    "type": "module",
     "engines": {
         "node": ">=8",
         "npm": ">=5"
@@ -40,7 +41,7 @@
         "@babel/preset-env": "^7.9.0",
         "@babel/preset-react": "^7.9.4",
         "@babel/preset-typescript": "^7.16.0",
-        "@svgr/rollup": "^4.3.3",
+        "@svgr/rollup": "^8.1.0",
         "@testing-library/jest-dom": "^5.16.1",
         "@testing-library/react": "^12.1.2",
         "@types/jest": "^27.0.3",
