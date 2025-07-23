@@ -8,7 +8,7 @@ import React, {
     useState,
     useMemo,
 } from 'react'
-import { throttle, debounce } from 'lodash-es'
+import { throttle, debounce, isNumber } from 'lodash-es'
 
 import './style.css'
 
@@ -26,6 +26,52 @@ const initialState = {
     // 总行数
     totalLen: 0,
 }
+
+/**
+     * @description: 10 -> 10,
+     * @description: 10px -> 10,
+     * @description: 90% -> height * 0.9
+     * @description: calc(100% - 32px) -> height * 1 - 32
+     * @description: calc(100vh - 32px) -> documentHeight * 1 - 32
+     * @param {*} ele
+     * @param {string & number} maxWidth
+     * @return {*}
+     */
+const transitionHeight = (parentHeight: number, height: string | number) => {
+    const documentHeight = document.documentElement.offsetHeight;
+    if (!height) return parentHeight;
+
+    if (typeof height === 'number') {
+        return height; // 如果父元素的宽度小于传入的最大宽度，返回父元素的宽度
+    }
+
+    const numMatch = height.match(/^(\d+)(px)?$/);
+    if (numMatch) {
+        return +numMatch[1]; // 如果父元素的宽度小于传入的最大宽度，返回父元素的宽度
+    }
+
+    const percentMatch = height.match(/^(\d+)%$/);
+    if (percentMatch) {
+        return parentHeight * (parseInt(percentMatch[1]) / 100);
+    }
+
+    const vhMatch = height.match(/^(\d+)(vh)?$/);
+    if (vhMatch) {
+        return documentHeight * (parseInt(vhMatch[1]) / 100);
+    }
+
+    const relativeMatch = height.match(/^calc\((\d+)% - (\d+)px\)$/);
+    if (relativeMatch) {
+        return parentHeight * (parseInt(relativeMatch[1]) / 100) - parseInt(relativeMatch[2]);
+    }
+
+    const absoluteMatch = height.match(/^calc\((\d+)vh - (\d+)px\)$/);
+    if (absoluteMatch) {
+        return documentHeight * (parseInt(absoluteMatch[1]) / 100) - parseInt(absoluteMatch[2]);
+    }
+
+    return parentHeight;
+};
 
 function reducer(state, action) {
     const { curScrollTop, rowHeight, totalLen, ifScrollTopClear } = action
@@ -219,20 +265,41 @@ function VTable(props: any, otherParams): JSX.Element {
         return temp
     }, [state.rowHeight, totalLen])
 
+    const [parentHeight, setParentHeight] = useState<number>()
+    useEffect(() => {
+        const parentElement = wrap_tableRef.current?.parentElement
+        const updateContainerHeight = () => {
+            if (!parentElement) return;
+            const containerHeight = parentElement.getBoundingClientRect()?.height;
+
+            setParentHeight(containerHeight);
+        };
+
+        setTimeout(() => {
+            updateContainerHeight()
+        })
+        // 在height为固定高度的时候不进行监听
+        if (isNumber(scrollY) || /^\b\d+px\b$/.test(scrollY)) return;
+
+        const ResizeObserverImpl =
+            typeof window !== 'undefined' && 'ResizeObserver' in window
+                ? window['ResizeObserver']
+                : null;
+        if (!ResizeObserverImpl) {
+            console.warn('ResizeObserver is not supported in this environment.');
+            return;
+        }
+        const resizeObserver = new ResizeObserverImpl(updateContainerHeight);
+        resizeObserver.observe(parentElement);
+        return () => resizeObserver.disconnect();
+    }, [])
+
     // table的scrollY值
     const [tableScrollY, setTableScrollY] = useState(0)
 
     // tableScrollY 随scrollY / tableHeight 进行变更
     useEffect(() => {
-        let temp = 0
-
-        if (typeof scrollY === 'string') {
-            temp =
-                (wrap_tableRef.current?.parentNode as HTMLElement)
-                    ?.offsetHeight ?? 0
-        } else {
-            temp = scrollY
-        }
+        let temp = transitionHeight(parentHeight ?? 0, scrollY) ?? 0
 
         // if (isNumber(tableHeight) && tableHeight < temp) {
         //   temp = tableHeight;
@@ -244,7 +311,7 @@ function VTable(props: any, otherParams): JSX.Element {
         }
 
         setTableScrollY(temp)
-    }, [scrollY, tableHeight])
+    }, [scrollY, tableHeight, parentHeight])
 
     // 渲染的条数
     const renderLen = useMemo<number>(() => {
@@ -397,7 +464,7 @@ function VTable(props: any, otherParams): JSX.Element {
 
 // ================导出===================
 export function VList(props: {
-    height: number | string
+    height?: number | string
     // 到底的回调函数
     onReachEnd?: () => void
     onScroll?: () => void
