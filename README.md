@@ -77,7 +77,7 @@ function Example(): JSX.Element {
 	const vComponents = useMemo(() => {
 		// 使用VList 即可有虚拟列表的效果
 		return VList({
-			height: 1000 // 此值和scrollY值相同. 必传. (required).  same value for scrolly
+			height: 1000 // 此值和scrollY值相同 (不传或者传string类型会自动计算表格高度)  same value for scrolly
 		})
 	}, [])
 
@@ -102,7 +102,7 @@ ReactDom.render(<Example />, dom)
 
 ```tsx
 	VList({
-		height: number | string,  // (必填) 对应scrollY.
+		height: number | string,  // (可选) 对应scrollY. (not required, if not set, will auto calculate table height)
 		onReachEnd: () => void, // (可选) 滚动条滚到底部触发api. (scrollbar to the end)
 		onScroll: () => void, // (可选) 滚动时触发的api. (triggered by scrolling)
 		vid: string, // (可选, 如果同一页面存在多个虚拟表格时必填.) 唯一标识. (unique vid, required when exist more vitual table on a page)
